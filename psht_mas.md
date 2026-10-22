@@ -6,12 +6,7 @@
 - PHP Version: 5.5.38
 - Database: `redesign`
 
-
--- --------------------------------------------------------
-
-
 ## Table structure for table `psht_mas`
-
 
 CREATE TABLE `psht_mas` (
   `wsm_id` bigint(8) unsigned NOT NULL AUTO_INCREMENT,

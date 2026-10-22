@@ -102,6 +102,22 @@ PS-PQL779
 PS-PQL780
 ```
 - analyse    
-find out which php function is showing the list of pws record in this module, and where the source code set ``` style='color:red ``` for pws record, and furthermore, find out which field controls the source code to set color for pws record, and find out where the source code update this field into which table.
+find out which php function is showing the list of pws record in this module, and where the source code set ``` style='color:red ``` for pws record, and furthermore, find out which field and its corresponding value set color for pws record, for example, to set a red color, the value of its field should be 0, to set a blue color, the value of its field should be 1, and check if there're more fields need to update to pair the updated value of red color field, or pair the updated value of blue color field, and find out where the source code update this field into which table.
 
 - do troubleshoot
+use the knowledge of mysql, construct queries that able to fix the record with collected information, including table name, record, fields of the record, value of each field, for example, to construct queries to fix this record, the value of field 'status' should be 0 to set this record to red color, and the related fields should amend with it, so the value of field 'wsm_checkby2' should be '', and wsm_checkdate2 should be '', and wsm_step should be 1, so the expected query to do this troubleshoot: 
+``` sql
+UPDATE `psht_mas` SET 
+    `wsm_checkby2` = '',
+    `wsm_checkdate2` = '',
+    `status` = '0',
+    `wsm_stage` = 'WIP', 
+    `wsm_stagedate` = '" . date("Y-m-d") . "',
+    `wsm_step` = '1'
+    WHERE `wsm_id` = $_REQUEST[id]  
+```
+
+- verify the fix
+1. for front-end: read the curl_tool.md, login the application and access the function, get the response from the tool result, and check the response with the collected information.
+2. for database: read the mysql-export.sh, and adapt the values for this application from database.md, and use the mysql-export.sh to export records from table, check if the fields to be amended in exported records were amend successfully.
+3. if verification not passed, revert the polluted fields in records to original values. If verification passed, write down a handoff for the steps you've done for future troubleshooting.
