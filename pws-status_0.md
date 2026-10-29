@@ -101,10 +101,10 @@ PS-PQL778
 PS-PQL779   
 PS-PQL780
 ```
-- analyse    
+- analyse (reasoning)
 find out which php function is showing the list of pws record in this module, and where the source code set ``` style='color:red ``` for pws record, and furthermore, find out which field and its corresponding value set color for pws record, for example, to set a red color, the value of its field should be 0, to set a blue color, the value of its field should be 1, and check if there're more fields need to update to pair the updated value of red color field, or pair the updated value of blue color field, and find out where the source code update this field into which table.
 
-- do troubleshoot
+- do troubleshoot (action)
 use the knowledge of mysql, construct queries that able to fix the record with collected information, including table name, record, fields of the record, value of each field, for example, to construct queries to fix this record, the value of field 'status' should be 0 to set this record to red color, and the related fields should amend with it, so the value of field 'wsm_checkby2' should be '', and wsm_checkdate2 should be '', and wsm_step should be 1, so the expected query to do this troubleshoot: 
 ``` sql
 UPDATE `psht_mas` SET 
