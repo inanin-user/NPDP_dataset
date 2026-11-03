@@ -1,0 +1,16 @@
+{"id":"t01","type":"definition","question":"What is a Production Worksheet (PWS) in this system?","answer":"A work order record for producing one item, stored as one row in table psht_mas."}
+{"id":"t02","type":"alias","question":"Which terms are aliases of Production Worksheet?","answer":"PWS, WS, W/S#, worksheet."}
+{"id":"t03","type":"state_to_ui","question":"Which value of psht_mas.status shows the worksheet link in red?","answer":"status = 1."}
+{"id":"t04","type":"state_to_ui","question":"What is the default value of status and how is it displayed?","answer":"0, shown with the default link color."}
+{"id":"t05","type":"email_to_column","question":"A user writes: 'Please check why PS-PQL773 is not confirmed.' Which column holds the identifier PS-PQL773?","answer":"wsm_wsno."}
+{"id":"t06","type":"email_to_column","question":"Email: 'Customer PO is missing.' Which column?","answer":"wsm_custpo."}
+{"id":"t07","type":"code_reading","question":"What does btnCheck2 do before the cut-off time?","answer":"Updates psht_mas immediately: wsm_checkby2, wsm_checkdate2, status=1, wsm_stage='WIP', wsm_stagedate=today, wsm_step=4."}
+{"id":"t08","type":"code_reading","question":"What does btnCheck2 do after the cut-off time?","answer":"Inserts a row into worksheet_send_list with wsl_status=0 and tells the user it will be approved at 01:00 next day, unless one already exists."}
+{"id":"t09","type":"definition","question":"What is worksheet_send_list?","answer":"A queue table of worksheets confirmed after cut-off, waiting for automatic next-day approval."}
+{"id":"t10","type":"definition","question":"What does wsl_status = 0 mean?","answer":"Queued, not yet processed."}
+{"id":"t11","type":"code_reading","question":"Which config key defines the cut-off time?","answer":"ws_approve_time_cut_off, read via Systemfunction::getConfig."}
+{"id":"t12","type":"definition","question":"What does 'wsm_step = 4' represent after confirmation?","answer":"The step value written when a worksheet is confirmed; the business meaning of each step must be confirmed by the owner."}
+{"id":"t13","type":"definition","question":"What is COO?","answer":"Country of origin, stored in wsm_coo (to be confirmed by owner)."}
+{"id":"t14","type":"definition","question":"What does 'handoff' mean in IT support?","answer":"A written record of the steps taken, so the next engineer can continue."}
+{"id":"t15","type":"definition","question":"Why back up rows before an UPDATE?","answer":"So the original values can be restored if verification fails."}
+{"id":"t16","type":"email_to_column","question":"Who confirmed the worksheet and when? Which columns?","answer":"wsm_checkby2 (user) and wsm_checkdate2 (datetime)."}
