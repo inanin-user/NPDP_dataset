@@ -1,0 +1,5 @@
+﻿source_file,form_name,button_name,button_value,handler_file,handler_line,match_kind,block_kind,condition,block_lines,tables,columns_written,calls,tables_via_calls,targets,session_keys,status
+pro/prod_mas.php,wsmform,btnCheck2,Confirmed,pro/prod_get.php,2,superglobal,if_block,isset($_POST['btnCheck2']),2-24,psht_mas:UPDATE,psht_mas.status;psht_mas.wsm_checkby2;psht_mas.wsm_checkdate2;psht_mas.wsm_stage;psht_mas.wsm_stagedate;psht_mas.wsm_step,getConfig;checkWSSendList;insertWSSendList,system_config:SELECT via getConfig();worksheet_send_list:INSERT via insertWSSendList()/SELECT via checkWSSendList(),include:common/systemfunction.php;redirect:pro/prod_mas.php,username,found
+pro/prod_mas.php,wsmform,btnSave,Save,pro/prod_get.php,26,superglobal,if_block,isset($_POST['btnSave']) && $_POST['btnSave'] != '',26-29,psht_mas:UPDATE,psht_mas.wsm_lastmoddate;psht_mas.wsm_remarks,,,redirect:pro/prod_mas.php,,found
+pro/prod_mas.php,wsmform,btnGhost,Ghost,,,,,,,,,,,,,not_found
+pro/prod_mas.php,,btnSearch,Search,pro/prod_mas.php,34,superglobal,if_block,isset($_POST['btnSearch']),34-34,psht_mas:SELECT,,,,,,found
