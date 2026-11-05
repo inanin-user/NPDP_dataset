@@ -9,11 +9,13 @@ Outputs (in --out):
   table_to_file.csv    table <-> file, with operation, function, columns written
   column_to_file.csv   schema columns mentioned per file (needs --schema)
   session_map.csv      $_SESSION key <-> local variable relations
+  display_calls.csv    displayField/displayText UI terms, session flags and values
   labels.jsonl         one JSON record per PHP file (feeds Q/A generation)
 """
 import argparse
 import bisect
 import csv
+import html
 import json
 import os
 import re
@@ -21,6 +23,7 @@ import sys
 from collections import defaultdict
 
 from file_filter import FileFilter
+import query_builder as QB
 from query_builder import code_mask, stmt_end, enrich_built_queries
 
 PHP_EXT = (".php", ".inc", ".phtml")
@@ -289,6 +292,181 @@ def session_rows(rel, text, starts, funcs, lines):
     return rows
 
 
+# ----------------------------------------------------------------- UI display helpers (SESSION / visible field mapping)
+DEFAULT_SIGNATURES = {
+    "displayField": {"column": 0, "size": 1, "flag": 2, "value": 3, "attrs": 4},
+    "displayText": {"flag": 0, "value": 1},
+}
+SESS_PATH = re.compile(
+    r"\$_SESSION((?:\s*\[\s*(?:'[^']*'|\"[^\"]*\"|[\w$]+)\s*\])+)"
+)
+CELL_OPEN = re.compile(r"<t[dh]\b", re.I)
+NOT_FUNCS = {"isset", "empty", "array", "list", "if", "elseif", "count", "is_array"}
+
+
+def load_signatures(path=None):
+    """Load configurable 0-based argument positions for display helpers."""
+    sigs = {name: dict(roles) for name, roles in DEFAULT_SIGNATURES.items()}
+    if not path:
+        return sigs
+    with open(path, "r", encoding="utf-8-sig") as f:
+        configured = json.load(f)
+    if not isinstance(configured, dict):
+        raise ValueError("--display-config must contain a JSON object")
+    for name, roles in configured.items():
+        if not isinstance(roles, dict):
+            raise ValueError("display signature for {!r} must be a JSON object".format(name))
+        parsed = {}
+        for role, position in roles.items():
+            try:
+                position = int(position)
+            except (TypeError, ValueError):
+                raise ValueError("argument position for {}.{} must be an integer".format(name, role))
+            if position < 0:
+                raise ValueError("argument position for {}.{} cannot be negative".format(name, role))
+            parsed[str(role)] = position
+        # A supplied helper definition replaces that helper's defaults, so roles
+        # omitted from the config are intentionally treated as unavailable.
+        sigs[str(name)] = parsed
+    return sigs
+
+
+def split_args(s):
+    """Split a PHP argument list on top-level commas (string/bracket aware)."""
+    args, cur, depth, quote, i = [], [], 0, None, 0
+    while i < len(s):
+        c = s[i]
+        if quote:
+            cur.append(c)
+            if c == "\\" and i + 1 < len(s):
+                cur.append(s[i + 1])
+                i += 2
+                continue
+            if c == quote:
+                quote = None
+        elif c in "'\"":
+            quote = c
+            cur.append(c)
+        elif c in "([{":
+            depth += 1
+            cur.append(c)
+        elif c in ")]}":
+            depth -= 1
+            cur.append(c)
+        elif c == "," and depth == 0:
+            args.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(c)
+        i += 1
+    if "".join(cur).strip() or args:
+        args.append("".join(cur).strip())
+    return args
+
+
+def static_text(raw):
+    """Return readable static cell text, excluding embedded PHP and HTML tags."""
+    raw = re.sub(r"<\?.*?(?:\?>|$)", " ", raw, flags=re.S)
+    raw = html.unescape(re.sub(r"<[^>]*>", " ", raw)).replace("\u00a0", " ")
+    return " ".join(raw.split()).strip(" :-\t")
+
+
+def find_label(text, pos, call_rx):
+    """Find the nearest preceding static label cell in the same table row."""
+    lo = max(0, pos - 3000)
+    cell_start = None
+    for match in CELL_OPEN.finditer(text, lo, pos):
+        cell_start = match.start()
+    if cell_start is None or re.search(r"</t[dh]\s*>", text[cell_start:pos], re.I):
+        return ""
+
+    row_start = None
+    row_lo = max(0, cell_start - 3000)
+    for match in re.finditer(r"<tr\b", text[row_lo:cell_start], re.I):
+        row_start = row_lo + match.start()
+    if row_start is None or re.search(r"</tr\s*>", text[row_start:cell_start], re.I):
+        return ""
+
+    segment = text[row_start:cell_start]
+    cell_matches = list(CELL_OPEN.finditer(segment))
+    cells = [segment[m.start(): cell_matches[i + 1].start()
+                     if i + 1 < len(cell_matches) else len(segment)]
+             for i, m in enumerate(cell_matches)]
+    for raw in reversed(cells):
+        if call_rx.search(raw):
+            continue  # Do not mistake a previous field's value cell for a label.
+        label = static_text(raw)
+        if re.search(r"[A-Za-z]", label) and len(re.findall(r"[A-Za-z0-9]+", label)) <= 8:
+            return label
+    return ""
+
+
+def find_display_calls(text, line_of, enclosing, col_tables=None, signatures=None):
+    """Extract displayField/displayText calls and infer their visible UI labels."""
+    sigs = signatures or DEFAULT_SIGNATURES
+    names = "|".join(sorted((re.escape(n) for n in sigs), key=len, reverse=True))
+    if not names:
+        return []
+    call_rx = re.compile(r"\b(" + names + r")\s*\(")
+    col_tables = col_tables or {}
+    rows = []
+
+    for match in call_rx.finditer(text):
+        if re.search(r"function\s*&?\s*$", text[max(0, match.start() - 15):match.start()]):
+            continue  # Function definition, not a call.
+        open_pos = match.end() - 1
+        close_pos = QB.find_close(text, open_pos, "(", ")")
+        if close_pos is None or close_pos < open_pos:
+            continue
+        args = split_args(text[open_pos + 1:close_pos])
+        signature = sigs[match.group(1)]
+
+        def arg(role):
+            index = signature.get(role)
+            return args[index] if index is not None and index < len(args) else ""
+
+        literal_column = re.fullmatch(r"\s*['\"]([^'\"]+)['\"]\s*", arg("column"))
+        flag_match = SESS_PATH.search(arg("flag"))
+        flag = keypath(flag_match.group(1)) if flag_match else ""
+        if literal_column:
+            column, column_source = literal_column.group(1), "argument"
+        elif flag:
+            column, column_source = flag.split(".")[-1], "flag_key"
+        else:
+            column, column_source = "", ""
+
+        value = arg("value")
+        value_sessions = [keypath(m.group(1)) for m in SESS_PATH.finditer(value)]
+        value_vars = [v for v in dict.fromkeys(re.findall(r"\$([A-Za-z]\w*)", value))]
+        formatters = [
+            name for name in dict.fromkeys(re.findall(r"\b([A-Za-z_]\w*)\s*\(", value))
+            if name.lower() not in NOT_FUNCS
+        ]
+        attrs = arg("attrs")
+        flag_parts = flag.split(".") if flag else []
+
+        rows.append({
+            "helper": match.group(1),
+            "pos": match.start(),
+            "end": close_pos + 1,
+            "line": line_of(match.start()),
+            "function": enclosing(match.start()),
+            "column": column,
+            "column_source": column_source,
+            "ui_term": find_label(text, match.start(), call_rx),
+            "flag_session": flag,
+            "flag_scope": ".".join(flag_parts[:-1]),
+            "value_expr": " ".join(value.split())[:160],
+            "value_vars": ";".join(value_vars),
+            "value_session": ";".join(dict.fromkeys(value_sessions)),
+            "formatter": ";".join(formatters),
+            "readonly": "yes" if re.search(r"readonly", attrs, re.I) else "",
+            "tables": ";".join(col_tables.get(column, [])),
+            "args": len(args),
+        })
+    return rows
+
+
 # ----------------------------------------------------------------- project loading (shared)
 def collect_files(src, skip, flt=None):
     """Walk src; return ({rel: abs_path}, [(rel, reason)]). flt = FileFilter or None."""
@@ -341,11 +519,18 @@ def main():
     ap.add_argument("--out", required=True, help="output directory")
     ap.add_argument("--schema", nargs="*", default=[], help="files containing CREATE TABLE statements")
     ap.add_argument("--skip", nargs="*", default=[".git", "node_modules", "vendor"], help="directory names to skip")
+    ap.add_argument("--display-config", help="JSON argument positions for displayField/displayText (optional)")
     add_filter_args(ap)
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
     schema = load_schema(args.schema)
+    display_signatures = load_signatures(args.display_config)
+    col_tables = defaultdict(list)
+    for table_name, columns in schema.items():
+        for column_name in columns:
+            col_tables[column_name].append(table_name)
+
     files, excluded = collect_files(args.src, args.skip, make_filter(args))
     if not files:
         print("No PHP files found under", args.src)
@@ -358,14 +543,15 @@ def main():
     data, defs, func_tables = load_project(files)
 
     # --- file_to_file + session + tables
-    ff_rows, tf_rows, sess_rows = [], [], []
+    ff_rows, tf_rows, sess_rows, display_rows = [], [], [], []
     labels = {}
     reverse = defaultdict(set)
     written = defaultdict(set)  # file -> {(table, col)}
     for rel, d in data.items():
         lab = labels[rel] = {"file": rel, "includes": [], "links_to": [], "tables": {},
                              "columns_written": {}, "functions_defined": [], "calls": [],
-                             "tables_via_calls": {}, "session_keys": [], "session_aliases": {}}
+                             "tables_via_calls": {}, "session_keys": [], "session_aliases": {},
+                             "display_calls": []}
         for (kind, raw), ln in file_edges(rel, d["text"], d["starts"]).items():
             target, status = resolve(rel, raw, files_lc, base_idx)
             ff_rows.append([rel, kind, raw, target, status, ln])
@@ -404,8 +590,31 @@ def main():
         lab["functions_defined"] = [n for _, _, n in d["funcs"]]
         srows = session_rows(rel, d["text"], d["starts"], d["funcs"], d["lines"])
         sess_rows.extend(srows)
-        lab["session_keys"] = sorted({r[3] for r in srows})
         lab["session_aliases"] = {r[4]: r[3] for r in srows if r[5] in ("alias", "derived")}
+
+        drows = find_display_calls(
+            d["text"],
+            lambda pos: line_of(d["starts"], pos),
+            lambda pos: enclosing(d["funcs"], pos),
+            col_tables=col_tables,
+            signatures=display_signatures,
+        )
+        lab["display_calls"] = drows
+        display_fields = [
+            "helper", "pos", "end", "line", "function", "column", "column_source",
+            "ui_term", "flag_session", "flag_scope", "value_expr", "value_vars",
+            "value_session", "formatter", "readonly", "tables", "args",
+        ]
+        display_rows.extend([[rel] + [row[field] for field in display_fields] for row in drows])
+
+        # Ensure SESSION paths used by display helpers remain discoverable in the
+        # file-level summary as well as in the detailed display_calls records.
+        display_session_keys = set()
+        for row in drows:
+            if row["flag_session"]:
+                display_session_keys.add(row["flag_session"])
+            display_session_keys.update(k for k in row["value_session"].split(";") if k)
+        lab["session_keys"] = sorted({r[3] for r in srows} | display_session_keys)
 
     # --- function calls
     fc_rows = []
@@ -440,11 +649,7 @@ def main():
 
     # --- column mentions (needs schema)
     col_rows = []
-    if schema:
-        col_tables = defaultdict(list)
-        for t, cols in schema.items():
-            for c in cols:
-                col_tables[c].append(t)
+    if schema and col_tables:
         rx = re.compile(r"(?P<pre>[`'\"$\[])(?P<col>" + "|".join(sorted(map(re.escape, col_tables), key=len, reverse=True)) + r")(?!\w)")
         kinds = {"$": "variable", "[": "bare_index"}
         for rel, d in data.items():
@@ -469,12 +674,17 @@ def main():
               ["table", "column", "file", "mention_kinds", "first_line", "count", "written"], col_rows)
     write_csv(os.path.join(args.out, "session_map.csv"),
               ["file", "line", "function", "session_key", "local_vars", "kind", "snippet"], sess_rows)
+    write_csv(os.path.join(args.out, "display_calls.csv"),
+              ["file", "helper", "pos", "end", "line", "function", "column", "column_source",
+               "ui_term", "flag_session", "flag_scope", "value_expr", "value_vars", "value_session",
+               "formatter", "readonly", "tables", "args"], display_rows)
     with open(os.path.join(args.out, "labels.jsonl"), "w", encoding="utf-8") as f:
         for lab in labels.values():
             f.write(json.dumps(lab, ensure_ascii=False) + "\n")
 
     print(f"files={len(files)} excluded={len(excluded)} file_edges={len(ff_rows)} call_edges={len(fc_rows)} "
-          f"table_rows={len(tf_rows)} column_rows={len(col_rows)} session_rows={len(sess_rows)}")
+          f"table_rows={len(tf_rows)} column_rows={len(col_rows)} session_rows={len(sess_rows)} "
+          f"display_calls={len(display_rows)}")
     return 0
 
 
