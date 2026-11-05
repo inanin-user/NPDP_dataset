@@ -8,7 +8,9 @@ Outputs (in --out):
   function_calls.csv   calls to functions defined elsewhere in the project
   table_to_file.csv    table <-> file, with operation, function, columns written
   column_to_file.csv   schema columns mentioned per file (needs --schema)
-  session_map.csv      $_SESSION key <-> local variable relations
+  session_map.csv      $_SESSION key <-> local variable relations (+ the table the key belongs to)
+  session_bindings.csv allFormSession(table, 'INIT', extra) calls: which table a page's session keys belong to
+  session_scope.csv    effective session table per file (own call, or inherited from the parent page)
   display_calls.csv    displayField/displayText UI terms, session flags and values
   labels.jsonl         one JSON record per PHP file (feeds Q/A generation)
 """
@@ -266,7 +268,9 @@ def keypath(g):
     return ".".join(k for k in re.findall(r"\[\s*['\"]?([^\]'\"]*?)['\"]?\s*\]", g))
 
 
-def session_rows(rel, text, starts, funcs, lines):
+def session_rows(rel, text, starts, funcs, lines, skip_spans=()):
+    """skip_spans: (start, end) ranges whose plain $_SESSION uses are already recorded elsewhere
+    (displayField/displayText calls -> display_calls.csv)."""
     rows, spans = [], []
     for m in ALIAS_RE.finditer(text):
         spans.append(m.span())
@@ -282,7 +286,7 @@ def session_rows(rel, text, starts, funcs, lines):
                      keypath(m.group(1)), ";".join(dict.fromkeys(rhs_vars)), "write",
                      " ".join(m.group(0).split())[:160]])
     for m in SESS_RE.finditer(text):
-        if any(s <= m.start() < e for s, e in spans):
+        if any(s <= m.start() < e for s, e in spans) or any(s <= m.start() < e for s, e in skip_spans):
             continue
         ln = line_of(starts, m.start())
         line = lines[ln - 1]
@@ -467,6 +471,176 @@ def find_display_calls(text, line_of, enclosing, col_tables=None, signatures=Non
     return rows
 
 
+# ----------------------------------------------------------------- session <-> table binding (allFormSession)
+# allFormSession($tablename, 'INIT', $extra) creates one $_SESSION[<column>] per column of ONE table
+# (INIT: empty values; otherwise: copies $_POST). So in a given PHP file every $_SESSION['column'] belongs to
+# that one table. The binding is inherited by the pages the file links / posts / redirects / includes.
+DEFAULT_BINDERS = {"allFormSession": {"table": 0, "init": 1, "extra": 2}}
+NAV_KINDS = {"link", "form_action", "redirect", "ajax", "window_open", "src"}
+MAX_AMBIGUOUS = 3        # an inherited scope with more tables than this is reported as 'too many' (no table claimed)
+
+
+def load_binders(path=None):
+    """Argument positions (0-based) of the session binder functions; same JSON shape as --display-config."""
+    binders = {name: dict(roles) for name, roles in DEFAULT_BINDERS.items()}
+    if not path:
+        return binders
+    with open(path, "r", encoding="utf-8-sig") as f:
+        configured = json.load(f)
+    if not isinstance(configured, dict):
+        raise ValueError("--binder-config must contain a JSON object")
+    for name, roles in configured.items():
+        if not isinstance(roles, dict):
+            raise ValueError("binder signature for {!r} must be a JSON object".format(name))
+        parsed = {}
+        for role, position in roles.items():
+            try:
+                position = int(position)
+            except (TypeError, ValueError):
+                raise ValueError("argument position for {}.{} must be an integer".format(name, role))
+            if position < 0:
+                raise ValueError("argument position for {}.{} cannot be negative".format(name, role))
+            parsed[str(role)] = position
+        binders[str(name)] = parsed
+    return binders
+
+
+def literal_or_var(text, pos, raw):
+    """(value|None, source) for an argument: quoted literal, or a $var assigned a literal earlier in the file."""
+    raw = (raw or "").strip()
+    if not raw:
+        return None, "missing"
+    m = re.fullmatch(r"['\"]([^'\"]*)['\"]", raw)
+    if m:
+        return m.group(1), "literal"
+    vm = re.fullmatch(r"\$([A-Za-z_]\w*)", raw)
+    if vm:
+        last = None
+        for am in re.finditer(r"\$" + re.escape(vm.group(1)) + r"\s*=(?!=)\s*['\"]([^'\"]*)['\"]\s*;", text[:pos]):
+            last = am
+        if last:
+            return last.group(1), "variable_assignment"
+        return None, "unresolved_variable"
+    return None, "unresolved_expression"
+
+
+def find_session_bindings(text, line_of, enclosing, binders, schema=None):
+    """Calls such as allFormSession('psht_mas', 'INIT', array(...)) -> one row per call."""
+    if not binders:
+        return []
+    names = "|".join(sorted((re.escape(n) for n in binders), key=len, reverse=True))
+    call_rx = re.compile(r"\b(" + names + r")\s*\(")
+    rows = []
+    for m in call_rx.finditer(text):
+        if re.search(r"function\s*&?\s*$", text[max(0, m.start() - 15):m.start()]):
+            continue                                   # the definition, not a call
+        op = m.end() - 1
+        cl = QB.find_close(text, op, "(", ")")
+        args = split_args(text[op + 1:cl])
+        sig = binders[m.group(1)]
+
+        def arg(role):
+            i = sig.get(role)
+            return args[i] if i is not None and i < len(args) else ""
+
+        table, tsrc = literal_or_var(text, m.start(), arg("table"))
+        init, _ = literal_or_var(text, m.start(), arg("init"))
+        mode = "dynamic" if init is None else ("INIT" if init.strip().upper() == "INIT" else "POST")
+        extra = re.findall(r"['\"]([A-Za-z_]\w*)['\"]", arg("extra"))
+        known = "unknown" if not schema or not table else ("yes" if table in schema else "no")
+        rows.append({"file": "", "line": line_of(m.start()), "function": enclosing(m.start()), "call": m.group(1),
+                     "table": table or "", "table_source": tsrc, "mode": mode,
+                     "extra_fields": list(dict.fromkeys(extra)), "in_schema": known, "inherited_from": [],
+                     "snippet": " ".join(text[m.start():cl + 1].split())[:160]})
+    return rows
+
+
+def build_session_scope(brows_by_file, ff_rows, depth=1, skip_files=()):
+    """Effective session table(s) per file.
+
+    own        : file calls a binder with a resolvable table
+    inherited  : file has no resolvable binder call but is linked / posted / redirected to / included by a file
+                 whose binder call is INIT ("the next php uses the same data source of the parent").
+    Returns {file: {"tables": [...], "source": own|inherited|inherited_ambiguous|inherited_too_many,
+                    "from": [...], "extra": [...], "depth": n}}
+    """
+    own, extra, seeds = {}, {}, {}
+    for rel, brows in brows_by_file.items():
+        tabs = list(dict.fromkeys(b["table"] for b in brows if b["table"]))
+        if tabs:
+            own[rel] = tabs
+        ex = list(dict.fromkeys(x for b in brows for x in b["extra_fields"]))
+        if ex:
+            extra[rel] = ex
+        init_tabs = list(dict.fromkeys(b["table"] for b in brows if b["table"] and b["mode"] == "INIT"))
+        if init_tabs:
+            seeds[rel] = init_tabs
+    children = defaultdict(set)
+    for src, kind, raw, target, status, ln in ff_rows:
+        if status in ("yes", "basename") and target and target != src and (kind in NAV_KINDS or kind.startswith("include")):
+            children[src].add(target)
+
+    inherited = {}
+    frontier = {rel: (tabs, extra.get(rel, [])) for rel, tabs in seeds.items()}
+    for level in range(1, max(1, depth) + 1):
+        reached = {}
+        for parent, (tabs, ex) in frontier.items():
+            for child in sorted(children.get(parent, ())):
+                if child in own or child in skip_files:
+                    continue                      # its own binder call wins / shared helper file
+                rec = inherited.setdefault(child, {"tables": [], "from": [], "extra": [], "depth": level})
+                for t in tabs:
+                    if t not in rec["tables"]:
+                        rec["tables"].append(t)
+                for x in ex:
+                    if x not in rec["extra"]:
+                        rec["extra"].append(x)
+                if parent not in rec["from"]:
+                    rec["from"].append(parent)
+                reached[child] = (rec["tables"][:], rec["extra"][:])
+        frontier = reached
+        if not frontier:
+            break
+
+    scope = {}
+    for rel, tabs in own.items():
+        scope[rel] = {"tables": tabs, "source": "own", "from": [], "extra": extra.get(rel, []), "depth": 0}
+    for rel, rec in inherited.items():
+        n = len(rec["tables"])
+        src = "inherited" if n == 1 else ("inherited_ambiguous" if n <= MAX_AMBIGUOUS else "inherited_too_many")
+        scope[rel] = {"tables": rec["tables"] if n <= MAX_AMBIGUOUS else [], "source": src,
+                      "from": rec["from"], "extra": rec["extra"], "depth": rec["depth"],
+                      "n_tables": n}
+    return scope
+
+
+def resolve_session_table(rel, key, scope, schema_sets, col_tables):
+    """(table, source) for a $_SESSION key path such as 'wsm_stage' or 'pro_pws.wsm_stage'."""
+    if not key:
+        return "", ""
+    if key.startswith("$"):
+        return "", "dynamic_key"
+    parts = key.split(".")
+    col = parts[-1]
+    sc = scope.get(rel)
+    if sc and sc["tables"]:
+        label = "bound" if sc["source"] == "own" else sc["source"]
+        if col in sc["extra"] or parts[0] in sc["extra"]:
+            return ";".join(sc["tables"]), "extra_field"
+        if not schema_sets:
+            return ";".join(sc["tables"]), label + "_unverified"
+        hits = [t for t in sc["tables"] if col in schema_sets.get(t, ())]
+        if hits:
+            return ";".join(hits), label
+        return "", "not_in_bound_table"          # e.g. username / login.level: not a column of the form's table
+    cands = col_tables.get(col, [])
+    if len(cands) == 1:
+        return cands[0], "schema_unique"
+    if len(cands) > 1:
+        return "", "schema_ambiguous"
+    return "", ""
+
+
 # ----------------------------------------------------------------- project loading (shared)
 def collect_files(src, skip, flt=None):
     """Walk src; return ({rel: abs_path}, [(rel, reason)]). flt = FileFilter or None."""
@@ -513,6 +687,13 @@ def make_filter(args):
 
 
 # ----------------------------------------------------------------- main
+DISPLAY_FIELDS = [
+    "helper", "pos", "end", "line", "function", "column", "column_source",
+    "ui_term", "flag_session", "flag_scope", "value_expr", "value_vars",
+    "value_session", "formatter", "readonly", "tables", "args",
+]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--src", required=True, help="PHP project root")
@@ -520,12 +701,18 @@ def main():
     ap.add_argument("--schema", nargs="*", default=[], help="files containing CREATE TABLE statements")
     ap.add_argument("--skip", nargs="*", default=[".git", "node_modules", "vendor"], help="directory names to skip")
     ap.add_argument("--display-config", help="JSON argument positions for displayField/displayText (optional)")
+    ap.add_argument("--binder-config", help="JSON argument positions for session binder functions such as "
+                                            "allFormSession (optional)")
+    ap.add_argument("--bind-depth", type=int, default=1,
+                    help="link/form/redirect/include hops over which a parent's INIT table is inherited (default 1)")
     add_filter_args(ap)
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
     schema = load_schema(args.schema)
+    schema_sets = {t: set(c) for t, c in schema.items()}
     display_signatures = load_signatures(args.display_config)
+    binders = load_binders(args.binder_config)
     col_tables = defaultdict(list)
     for table_name, columns in schema.items():
         for column_name in columns:
@@ -542,16 +729,17 @@ def main():
         base_idx[os.path.basename(k).lower()].append(k)
     data, defs, func_tables = load_project(files)
 
-    # --- file_to_file + session + tables
-    ff_rows, tf_rows, sess_rows, display_rows = [], [], [], []
+    # --- file_to_file + tables + (pending) session / display / binder rows
+    ff_rows, tf_rows, sess_rows, display_rows, bind_rows, scope_rows = [], [], [], [], [], []
     labels = {}
     reverse = defaultdict(set)
     written = defaultdict(set)  # file -> {(table, col)}
+    pending = {}
     for rel, d in data.items():
         lab = labels[rel] = {"file": rel, "includes": [], "links_to": [], "tables": {},
                              "columns_written": {}, "functions_defined": [], "calls": [],
                              "tables_via_calls": {}, "session_keys": [], "session_aliases": {},
-                             "display_calls": []}
+                             "display_calls": [], "session_bindings": [], "session_scope": {}}
         for (kind, raw), ln in file_edges(rel, d["text"], d["starts"]).items():
             target, status = resolve(rel, raw, files_lc, base_idx)
             ff_rows.append([rel, kind, raw, target, status, ln])
@@ -588,27 +776,54 @@ def main():
             if st["cols"]:
                 lab["columns_written"].setdefault(st["table"], []).extend(st["cols"])
         lab["functions_defined"] = [n for _, _, n in d["funcs"]]
-        srows = session_rows(rel, d["text"], d["starts"], d["funcs"], d["lines"])
-        sess_rows.extend(srows)
+
+        line_fn = lambda pos, d=d: line_of(d["starts"], pos)
+        func_fn = lambda pos, d=d: enclosing(d["funcs"], pos)
+        drows = find_display_calls(d["text"], line_fn, func_fn, col_tables=col_tables, signatures=display_signatures)
+        srows = session_rows(rel, d["text"], d["starts"], d["funcs"], d["lines"],
+                             skip_spans=[(r["pos"], r["end"]) for r in drows])
+        brows = find_session_bindings(d["text"], line_fn, func_fn, binders, schema)
+        for b in brows:
+            b["file"] = rel
+        pending[rel] = (srows, drows, brows)
+
+    # --- second pass: which table does $_SESSION['column'] belong to in each file?
+    binder_files = {f for name in binders for f in defs.get(name, [])}     # files that DEFINE allFormSession
+    scope = build_session_scope({rel: p[2] for rel, p in pending.items()}, ff_rows, args.bind_depth,
+                                skip_files=binder_files)
+    for rel, (srows, drows, brows) in pending.items():
+        lab = labels[rel]
+        sc = scope.get(rel)
+        for b in brows:                                    # binder call whose table is a variable of the parent
+            if not b["table"] and sc and sc["source"].startswith("inherited") and sc["tables"]:
+                b["table"] = ";".join(sc["tables"])
+                b["table_source"] = sc["source"]
+                b["inherited_from"] = sc["from"]
+                b["in_schema"] = "unknown" if not schema else ("yes" if all(t in schema for t in sc["tables"]) else "no")
+            bind_rows.append([rel, b["line"], b["function"], b["call"], b["table"], b["table_source"], b["mode"],
+                              ";".join(b["extra_fields"]), b["in_schema"], ";".join(b["inherited_from"]), b["snippet"]])
+        lab["session_bindings"] = [{k: v for k, v in b.items() if k != "file"} for b in brows]
+        if sc:
+            scope_rows.append([rel, ";".join(sc["tables"]), sc["source"], ";".join(sc["from"]), sc["depth"],
+                               ";".join(sc["extra"])])
+            lab["session_scope"] = {"tables": sc["tables"], "source": sc["source"], "from": sc["from"],
+                                    "extra_fields": sc["extra"]}
+
+        for r in srows:                                    # r[3] = session key path
+            tbl, tsrc = resolve_session_table(rel, r[3], scope, schema_sets, col_tables)
+            sess_rows.append(r + [tbl, tsrc])
         lab["session_aliases"] = {r[4]: r[3] for r in srows if r[5] in ("alias", "derived")}
 
-        drows = find_display_calls(
-            d["text"],
-            lambda pos: line_of(d["starts"], pos),
-            lambda pos: enclosing(d["funcs"], pos),
-            col_tables=col_tables,
-            signatures=display_signatures,
-        )
+        for row in drows:
+            tbl, tsrc = resolve_session_table(rel, row["column"], scope, schema_sets, col_tables)
+            row["table"], row["table_source"] = tbl, tsrc
+            if tbl:                                        # a bound table replaces the long schema candidate list
+                row["tables"] = tbl
         lab["display_calls"] = drows
-        display_fields = [
-            "helper", "pos", "end", "line", "function", "column", "column_source",
-            "ui_term", "flag_session", "flag_scope", "value_expr", "value_vars",
-            "value_session", "formatter", "readonly", "tables", "args",
-        ]
-        display_rows.extend([[rel] + [row[field] for field in display_fields] for row in drows])
+        display_rows.extend([[rel] + [row[f] for f in DISPLAY_FIELDS] + [row["table"], row["table_source"]]
+                             for row in drows])
 
-        # Ensure SESSION paths used by display helpers remain discoverable in the
-        # file-level summary as well as in the detailed display_calls records.
+        # Keep every SESSION path (generic, display flags / values) discoverable in the file-level summary.
         display_session_keys = set()
         for row in drows:
             if row["flag_session"]:
@@ -673,18 +888,22 @@ def main():
     write_csv(os.path.join(args.out, "column_to_file.csv"),
               ["table", "column", "file", "mention_kinds", "first_line", "count", "written"], col_rows)
     write_csv(os.path.join(args.out, "session_map.csv"),
-              ["file", "line", "function", "session_key", "local_vars", "kind", "snippet"], sess_rows)
+              ["file", "line", "function", "session_key", "local_vars", "kind", "snippet", "table", "table_source"],
+              sess_rows)
+    write_csv(os.path.join(args.out, "session_bindings.csv"),
+              ["file", "line", "function", "call", "table", "table_source", "mode", "extra_fields", "in_schema",
+               "inherited_from", "snippet"], bind_rows)
+    write_csv(os.path.join(args.out, "session_scope.csv"),
+              ["file", "tables", "source", "inherited_from", "depth", "extra_fields"], scope_rows)
     write_csv(os.path.join(args.out, "display_calls.csv"),
-              ["file", "helper", "pos", "end", "line", "function", "column", "column_source",
-               "ui_term", "flag_session", "flag_scope", "value_expr", "value_vars", "value_session",
-               "formatter", "readonly", "tables", "args"], display_rows)
+              ["file"] + DISPLAY_FIELDS + ["table", "table_source"], display_rows)
     with open(os.path.join(args.out, "labels.jsonl"), "w", encoding="utf-8") as f:
         for lab in labels.values():
             f.write(json.dumps(lab, ensure_ascii=False) + "\n")
 
     print(f"files={len(files)} excluded={len(excluded)} file_edges={len(ff_rows)} call_edges={len(fc_rows)} "
           f"table_rows={len(tf_rows)} column_rows={len(col_rows)} session_rows={len(sess_rows)} "
-          f"display_calls={len(display_rows)}")
+          f"display_calls={len(display_rows)} session_bindings={len(bind_rows)} session_scopes={len(scope_rows)}")
     return 0
 
 

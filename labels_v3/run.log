@@ -1,1 +1,8 @@
-files=2428 excluded=551 file_edges=5633 call_edges=33112 table_rows=7746 column_rows=414676 session_rows=31516
+Traceback (most recent call last):
+  File "D:\Dataset_20261020\extract_label_tool_v2\extract_labels.py", line 911, in <module>
+    sys.exit(main())
+  File "D:\Dataset_20261020\extract_label_tool_v2\extract_labels.py", line 890, in main
+    write_csv(os.path.join(args.out, "session_map.csv"),
+  File "D:\Dataset_20261020\extract_label_tool_v2\extract_labels.py", line 133, in write_csv
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+PermissionError: [Errno 13] Permission denied: 'D:\\Dataset_20261020\\labels_v3\\session_map.csv'

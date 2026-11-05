@@ -1,7 +1,7 @@
 # Static-analysis label generator for legacy PHP
 
 ## Run
-    run_static_analysis.bat D:\NPS_backup_20261029\Test D:\Dataset_20261020\labels_v3 D:\NPS_backup_20261029\redesign_sql\redesign.sql
+    run_static_analysis.bat D:\NPS_backup_20261029\Test D:\Dataset_20261020\labels_v4 D:\NPS_backup_20261029\redesign_sql\redesign.sql
 
 Runs two steps: `extract_labels.py` (relationships) then `extract_form_actions.py` (forms/buttons).
 Both use `file_filter.py` to skip backup/draft/dated copies.
@@ -18,6 +18,9 @@ Schedule nightly (Windows Task Scheduler), adjust paths:
 | function_calls.csv | Which file calls a function defined in which other file |
 | table_to_file.csv | Which file reads/writes which table, in which function, which columns written. One-line queries are aggregated per (table, operation) with `lines` like `100;101`; every query built over several statements gets its OWN row (`statement_kind`, `exec_line`) |
 | column_to_file.csv | Which file mentions/writes a schema column (e.g. who writes psht_mas.status) |
+| session_bindings.csv | Every `allFormSession(table, 'INIT'|'', extra)` call: resolved table, how it was resolved, mode, extra fields, parent it was inherited from |
+| session_scope.csv | Effective session table per file: `own` (page calls the binder) or `inherited` from the parent page that INITs it |
+| display_calls.csv | `displayField` / `displayText` calls: visible UI term (label cell), column, permission flag `$_SESSION[scope][column]`, value expression, bound table |
 | session_map.csv | $_SESSION key <-> local variable: alias, derived, write, use (co-occurring vars) |
 | excluded_files.csv | Files skipped by the filter, with the reason (audit trail) |
 | form_actions.csv | Every form and button: which button posts to which file, method, query params, hidden fields, onclick targets |
@@ -76,3 +79,25 @@ Pattern: `$query = "INSERT INTO t "; $fields = "("; ... $fields = $fields . "$co
 - Comment text (including trailing `// ...` comments) is blanked before analysis, so commented-out code never produces rows.
 
 Limits: no real data flow; queries stored in arrays, passed to other functions before execution, or built with `sprintf`/`implode` are reported as `built_unresolved`; a variable reused for two queries is split at the next `$var = "INSERT|UPDATE|..."` assignment.
+
+## Session keys <-> ONE table (allFormSession)
+`allFormSession($tablename, $init, $extraField)` creates one `$_SESSION[<column>]` per column of ONE table
+(`'INIT'`: empty values; any other value: copy of `$_POST`). So inside a page every `$_SESSION['column']` belongs to the table passed to
+that call, not to every table that happens to have a column of that name.
+
+- **own**: the page calls the binder with a literal (`'psht_mas'`) or a `$var` assigned a literal earlier in the same file.
+- **inherited**: the page has no resolvable call (no call, or `$tablename` is only set by the parent) and is linked / posted to /
+  redirected to / included by a page whose call is `'INIT'`. Only INIT calls are inherited; the page's own call always wins;
+  `--bind-depth N` (default 1) sets how many hops are followed.
+- Several INIT parents with different tables: up to 3 tables are listed (`inherited_ambiguous`); more than 3 -> `inherited_too_many`
+  and no table is claimed.
+- The file that DEFINES the binder is never given an inherited table.
+- `table_source` in `session_map.csv` / `display_calls.csv`: `bound`, `inherited`, `inherited_ambiguous`, `extra_field` (key listed in
+  the 3rd argument), `not_in_bound_table` (e.g. `username`, `login.level`: not a column of the page's table), `dynamic_key`
+  (`$_SESSION[$value]`), `schema_unique` / `schema_ambiguous` (file has no binding; hint only), `*_unverified` (no --schema given).
+- Plain `$_SESSION` reads inside `displayField(...)`/`displayText(...)` are no longer repeated as `use` rows in session_map.csv;
+  they are in display_calls.csv.
+- Different helper name or argument order: `binder_config.json`, e.g. `{"allFormSession": {"table": 0, "init": 1, "extra": 2}}`
+  (0-based positions; pass with `--binder-config`, or put the file next to the .bat).
+- Limits: only literal / simply assigned table names are resolved (`$_GET['t']`, concatenations -> `unresolved_expression`);
+  a table chosen at run time in the parent cannot be known statically.
