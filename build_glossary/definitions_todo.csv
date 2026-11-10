@@ -1,0 +1,12 @@
+﻿term,kinds,ambiguity,evidence_count,points_to,definition,aliases,owner
+Status,field,medium,3,mld_status -> mld_entry | wsm_stage -> psht_mas,,,
+Lock Date,field;link,low,2,mld_date -> mld_entry,,,
+Received Time,field,low,2,wsm_receivedbytime1 -> psht_mas,,,
+Shared,menu,low,2,pro/shared.php,,,
+Silver,field,low,2,mld_silver -> mld_entry,,,
+Back to menu,menu,low,1,misc/menu.php,,,
+Date,field,low,1,mld_date -> mld_entry,,,
+Detail,menu,low,1,misc/mld_mas.php,,,
+Metal lock data maintenance,page,low,1,misc/mld_main.php,,,
+Metal Lock Price Data Entry Form,page,low,1,misc/mld_mas.php,,,
+Search,button,low,1,,,,

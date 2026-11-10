@@ -1,0 +1,5 @@
+﻿source_file,line,context,form_name,header_label,row_label,cell_index,link_text,link_columns,key_columns,href_raw,target_file,target_status,action_mode,query_params,onclick,target_mode_found,target_mode_line,target_mode_tables,target_mode_columns_written,target_mode_calls
+misc/mld_main.php,10,table_cell,,Gold,,1,,mld_gold,mld_id,mld_mas.php?action=modify&id=<?= $row['mld_id'] ?>,misc/mld_mas.php,yes,modify,action=modify | id=<?= $row[,,yes,2,mld_entry:SELECT,,
+misc/mld_main.php,12,table_cell,,Remarks,,3,Detail,,mld_id,mld_mas.php?action=view&id=<?= $row['mld_id'] ?>,misc/mld_mas.php,yes,view,action=view | id=<?= $row[,,no,,,,
+misc/mld_main.php,17,in_form,searchform,,,,New,,,mld_mas.php?action=add,misc/mld_mas.php,yes,add,action=add,,yes,5,,,
+misc/mld_mas.php,14,table_cell,mldform,,Lock Date,1,,mld_date,,calendar.php?field=mld_date,misc/calendar.php,yes,,field=mld_date,,,,,,

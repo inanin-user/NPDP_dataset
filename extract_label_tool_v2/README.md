@@ -101,3 +101,23 @@ that call, not to every table that happens to have a column of that name.
   (0-based positions; pass with `--binder-config`, or put the file next to the .bat).
 - Limits: only literal / simply assigned table names are resolved (`$_GET['t']`, concatenations -> `unresolved_expression`);
   a table chosen at run time in the parent cannot be known statically.
+
+## Links that wrap columns (link_actions.csv) - lowers the email -> page ambiguity
+List pages often show a column value as a link to the edit page: `<td><a href="mld_mas.php?action=modify&id=<?= $row['mld_id'] ?>"><?= $row['mld_gold'] ?></a></td>`.
+`extract_form_actions.py` now records every `<a href="x.php...">` that sits in a table cell or inside a form:
+
+| column | meaning |
+|---|---|
+| context | `table_cell`, or `in_form` (link inside a <form> but not in a table); links elsewhere (menus) are skipped unless `--all-links` |
+| header_label / row_label | the column header above the cell (`Gold`), and/or the label cell on the left in the same row |
+| link_columns / key_columns | columns shown inside the link (`mld_gold`) / record key used in the URL (`mld_id`) |
+| target_file, action_mode | resolved target page and the literal `action=` value (`modify`, `add`, `view`) |
+| target_mode_found / _line / _tables / _columns_written / _calls | where the target handles `$_REQUEST['action'] == 'modify'` and what that block does |
+
+`link_actions.jsonl` has the same rows plus a summary sentence. `field_labels.csv` gained `link_target` and `link_mode`
+(a header label such as `Gold` on the list page knows which page it opens), and `term_bridge.jsonl` carries them too.
+The record key in the URL is NOT counted as a column displayed in the cell.
+Chain for an email saying "gold lock": file_titles.csv (page title) -> field_labels.csv (`Gold` -> mld_gold, link_target mld_mas.php, mode modify)
+-> field_labels.csv on mld_mas.php (`Gold` -> mld_gold, table mld_entry) -> link_actions.csv (what the modify branch does).
+Limits: `javascript:` links without a `.php` path and links whose text is built by a function are skipped or have empty `link_columns`;
+only `action=<literal>` is understood as a mode; a mode handled with `switch/case` (not `if (... == 'x')`) shows `target_mode_found=no`.

@@ -9,10 +9,14 @@ Outputs (in --out):
   form_actions.csv     one row per button (and one row per form that has no button)
   button_handlers.csv  one row per (button, handler location); 'not_found' rows show gaps
   ui_actions.jsonl     one JSON record per button incl. a template-generated summary sentence
+  link_actions.csv     <a href="page.php?action=.."> links in table cells / forms: column header or row label,
+                       the columns wrapped by the link, target page and what the target does for that action mode
+  link_actions.jsonl   same, one JSON record per link with a summary sentence
 
 Python 3.8+, standard library only. Heuristic (regex) based; see README.md.
 """
 import argparse
+import bisect
 import json
 import os
 import re
@@ -263,12 +267,178 @@ def summarize(rec):
     return s + "."
 
 
+# ----------------------------------------------------------------- links wrapping columns  (<a href="mld_mas.php?...">value</a>)
+ANCHOR_RE = re.compile(r"<a\b", re.I)
+ROW_RE = re.compile(r"<tr\b", re.I)
+CELL_RE = re.compile(r"<t[dh]\b", re.I)
+SUPERGLOBALS = ("_POST", "_GET", "_REQUEST", "_SESSION", "_COOKIE", "_SERVER", "_FILES")
+
+
+def analyse_rows(text):
+    """Every <tr>: {'start','end','cells':[(start,end)]} (absolute offsets)."""
+    rows = []
+    for m in ROW_RE.finditer(text):
+        end = scan_tag(text, m.start())
+        if end < 0:
+            continue
+        cl = re.compile(r"</tr\s*>", re.I).search(text, end + 1)
+        rend = cl.start() if cl else min(len(text), end + 4000)
+        cms = [x.start() for x in CELL_RE.finditer(text, end + 1, rend)]
+        cells = [(s, cms[i + 1] if i + 1 < len(cms) else rend) for i, s in enumerate(cms)]
+        rows.append({"start": m.start(), "end": rend, "cells": cells})
+    return rows
+
+
+def row_texts(text, row):
+    return [EL.static_text(text[s:e]) for s, e in row["cells"]]
+
+
+def is_header_row(text, row):
+    """>= 2 static labelled cells and no PHP variable in the row -> a column-header row."""
+    if "$" in text[row["start"]:row["end"]]:
+        return False
+    return sum(1 for t in row_texts(text, row) if re.search(r"[A-Za-z]", t)) >= 2
+
+
+def link_refs(raw, colset):
+    """Columns referenced inside an expression: $row['col'] keys (and $col variables that are schema columns)."""
+    cols = []
+    for var, key in re.findall(r"\$([A-Za-z_]\w*)\s*\[\s*['\"](\w+)['\"]\s*\]", raw):
+        if var not in SUPERGLOBALS and (not colset or key in colset):
+            cols.append(key)
+    if colset:
+        for v in re.findall(r"\$([A-Za-z]\w*)", raw):
+            if v in colset:
+                cols.append(v)
+    return list(dict.fromkeys(cols))
+
+
+def target_mode_handlers(target, mode, data, project):
+    """Where the target page handles `$_REQUEST['action'] == mode`, and what that block does."""
+    d = data.get(target)
+    if not d or not mode:
+        return []
+    m_ = re.escape(mode)
+    pats = [re.compile(r"\$_(?:REQUEST|GET|POST)\s*\[\s*['\"]action['\"]\s*\]\s*==\s*['\"]%s['\"]" % m_),
+            re.compile(r"['\"]%s['\"]\s*==\s*\$_(?:REQUEST|GET|POST)\s*\[\s*['\"]action['\"]\s*\]" % m_),
+            re.compile(r"\$action\s*==\s*['\"]%s['\"]" % m_)]
+    out, seen = [], set()
+    for rx in pats:
+        for m in rx.finditer(d["text"]):
+            bkind, bs, be, cond = handler_block(d["text"], m.start())
+            if bkind == "window" or (bs, be) in seen:
+                continue                               # e.g. a ternary inside HTML: not a handler block
+            seen.add((bs, be))
+            info = analyse_block(target, d, bs, be, project)
+            info.update({"file": target, "line": EL.line_of(d["starts"], m.start()), "condition": cond,
+                         "block_kind": bkind})
+            out.append(info)
+    return out
+
+
+def scan_links(rel, d, forms, colset, files_lc, base_idx, data, project, all_links=False):
+    text, starts = d["text"], d["starts"]
+    rows = analyse_rows(text)
+    row_starts = [r["start"] for r in rows]
+    header_cache = {}
+    out = []
+    for m in ANCHOR_RE.finditer(text):
+        end = scan_tag(text, m.start())
+        if end < 0:
+            continue
+        attrs = parse_tag(text[m.start():end + 1])
+        href, onclick = attrs.get("href", ""), attrs.get("onclick", "")
+        pm = EL.PATH_RE.search(href) or EL.PATH_RE.search(onclick)
+        if not pm:
+            continue
+        cm = re.compile(r"</a\s*>", re.I).search(text, end + 1, end + 1500)
+        inner = text[end + 1: cm.start()] if cm else text[end + 1: end + 201]
+        pos = m.start()
+
+        # where is the link: table cell / form / elsewhere
+        ri = bisect.bisect_right(row_starts, pos) - 1
+        row = rows[ri] if ri >= 0 and rows[ri]["start"] <= pos < rows[ri]["end"] else None
+        cell_idx, context = None, "other"
+        if row:
+            for i, (cs, ce) in enumerate(row["cells"]):
+                if cs <= pos < ce:
+                    cell_idx, context = i, "table_cell"
+                    break
+        form_name = ""
+        for f in forms:
+            if f["tag_end"] < pos < f["body_end"]:
+                form_name = f["attrs"].get("name", "") or f["attrs"].get("id", "") or "(unnamed)"
+                if context == "other":
+                    context = "in_form"
+        if context == "other" and not all_links:
+            continue
+
+        # column header above the cell and the label cell in the same row
+        header_label, row_label = "", ""
+        if row is not None and cell_idx is not None:
+            for k in range(ri - 1, max(-1, ri - 40), -1):
+                if k not in header_cache:
+                    header_cache[k] = row_texts(text, rows[k]) if is_header_row(text, rows[k]) else None
+                if header_cache[k] is not None:
+                    hdr = header_cache[k]
+                    header_label = hdr[cell_idx] if cell_idx < len(hdr) else ""
+                    break
+            for cs, ce in reversed(row["cells"][:cell_idx]):
+                raw = text[cs:ce]
+                lab = EL.static_text(raw)
+                if re.search(r"[A-Za-z]", lab) and "$" not in raw and "<a " not in raw.lower() \
+                        and len(re.findall(r"[A-Za-z0-9]+", lab)) <= 8:
+                    row_label = lab
+                    break
+
+        tgt, status = EL.resolve(rel, pm.group(1), files_lc, base_idx)
+        qp = re.findall(r"[?&]([A-Za-z_]\w*)=([^&\"']*)", href)
+        mode = next((v for k, v in qp if k == "action" and re.fullmatch(r"\w+", v)), "")
+        handlers = target_mode_handlers(tgt, mode, data, project) if status in ("yes", "basename") else []
+        out.append({
+            "source_file": rel, "line": EL.line_of(starts, pos), "context": context, "form_name": form_name,
+            "header_label": header_label, "row_label": row_label,
+            "cell_index": "" if cell_idx is None else cell_idx,
+            "link_text": squash(EL.static_text(inner), 80),
+            "link_columns": ";".join(link_refs(inner, colset)),
+            "key_columns": ";".join(link_refs(href, colset)),
+            "href_raw": squash(href), "target_file": tgt or pm.group(1), "target_status": status,
+            "action_mode": mode, "query_params": squash(" | ".join("%s=%s" % kv for kv in qp)),
+            "onclick": squash(onclick), "handlers": handlers})
+    return out
+
+
+def link_summary(r):
+    label = r["header_label"] or r["row_label"] or r["link_text"] or "(unlabelled)"
+    kind = "column" if r["header_label"] else ("field" if r["row_label"] else "link")
+    s = "In %s, the %s '%s'" % (r["source_file"], kind, label)
+    if r["link_columns"]:
+        s += " (columns: %s)" % r["link_columns"].replace(";", ", ")
+    s += " links to %s" % r["target_file"]
+    if r["action_mode"]:
+        s += " with action=%s" % r["action_mode"]
+    if r["key_columns"]:
+        s += ", record key %s" % r["key_columns"].replace(";", ", ")
+    if r["handlers"]:
+        h = r["handlers"][0]
+        s += ". Target handles it at line %d when %s" % (h["line"], h["condition"] or "(no condition)")
+        if h["tables"]:
+            s += "; tables: " + ", ".join("%s %s" % (t, "/".join(o)) for t, o in h["tables"].items())
+        if h["columns_written"]:
+            s += "; columns written: " + "; ".join("%s(%s)" % (t, ", ".join(c)) for t, c in h["columns_written"].items())
+    elif r["action_mode"]:
+        s += ". No handler for action=%s was found in the target" % r["action_mode"]
+    return s + "."
+
+
 # ----------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--src", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--skip", nargs="*", default=[".git", "node_modules", "vendor"])
+    ap.add_argument("--schema", nargs="*", default=[], help="files with CREATE TABLE (keeps only real columns in link_columns)")
+    ap.add_argument("--all-links", action="store_true", help="also record links outside table cells / forms")
     EL.add_filter_args(ap)
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
@@ -363,14 +533,39 @@ def main():
             rec["summary_template"] = summarize(rec)
             records.append(rec)
 
+    schema = EL.load_schema(args.schema)
+    colset = {c for cols in schema.values() for c in cols}
+    link_rows, link_records = [], []
+    la_head = ["source_file", "line", "context", "form_name", "header_label", "row_label", "cell_index", "link_text",
+               "link_columns", "key_columns", "href_raw", "target_file", "target_status", "action_mode", "query_params",
+               "onclick", "target_mode_found", "target_mode_line", "target_mode_tables", "target_mode_columns_written",
+               "target_mode_calls"]
+    for rel, d in sorted(data.items()):
+        forms_ = parse_forms(d["text"])
+        for r in scan_links(rel, d, forms_, colset, files_lc, base_idx, data, project, args.all_links):
+            h = r["handlers"][0] if r["handlers"] else None
+            link_rows.append([r["source_file"], r["line"], r["context"], r["form_name"], r["header_label"], r["row_label"],
+                              r["cell_index"], r["link_text"], r["link_columns"], r["key_columns"], r["href_raw"],
+                              r["target_file"], r["target_status"], r["action_mode"], r["query_params"], r["onclick"],
+                              ("yes" if h else ("no" if r["action_mode"] else "")), h["line"] if h else "",
+                              ";".join("%s:%s" % (t, "/".join(o)) for t, o in h["tables"].items()) if h else "",
+                              ";".join("%s.%s" % (t, c) for t, cs in h["columns_written"].items() for c in cs) if h else "",
+                              ";".join(h["calls"]) if h else ""])
+            rec = dict(r)
+            rec["summary_template"] = link_summary(r)
+            link_records.append(rec)
+    EL.write_csv(os.path.join(args.out, "link_actions.csv"), la_head, link_rows)
+    with open(os.path.join(args.out, "link_actions.jsonl"), "w", encoding="utf-8") as f:
+        for r in link_records:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
     EL.write_csv(os.path.join(args.out, "form_actions.csv"), fa_head, fa_rows)
     EL.write_csv(os.path.join(args.out, "button_handlers.csv"), bh_head, bh_rows)
     with open(os.path.join(args.out, "ui_actions.jsonl"), "w", encoding="utf-8") as f:
         for r in records:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     nf = sum(1 for r in bh_rows if r[-1] == "not_found")
-    print("files=%d excluded=%d form_rows=%d buttons=%d handlers_not_found=%d"
-          % (len(files), len(excluded), len(fa_rows), len(records), nf))
+    print("files=%d excluded=%d form_rows=%d buttons=%d handlers_not_found=%d links=%d"
+          % (len(files), len(excluded), len(fa_rows), len(records), nf, len(link_rows)))
     return 0
 
 

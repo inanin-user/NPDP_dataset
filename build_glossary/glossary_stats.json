@@ -1,0 +1,16 @@
+{
+  "cards": 16,
+  "generic": 6,
+  "by_kind": {
+    "page": 2,
+    "menu": 5,
+    "link": 4,
+    "field": 6,
+    "button": 2
+  },
+  "by_ambiguity": {
+    "low": 10
+  },
+  "with_definition": 1,
+  "definitions_todo": 11
+}

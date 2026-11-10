@@ -1,0 +1,7 @@
+﻿label,column,tables,file,line,kind,element,link_target,link_mode,norm_key
+Date,mld_date,mld_entry,misc/mld_main.php,8,header_index,row_key,,,date
+Gold,mld_gold,mld_entry,misc/mld_main.php,8,header_index,row_key,misc/mld_mas.php,modify,gold
+Silver,mld_silver,mld_entry,misc/mld_main.php,8,header_index,row_key,,,silver
+Gold,mld_gold,mld_entry,misc/mld_mas.php,12,td_next,input,,,gold
+Silver,mld_silver,mld_entry,misc/mld_mas.php,13,td_next,input,,,silver
+Lock Date,mld_date,mld_entry,misc/mld_mas.php,14,td_next,row_key,misc/calendar.php,,lock date

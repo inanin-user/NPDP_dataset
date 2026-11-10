@@ -12,7 +12,7 @@ This script extracts those visible terms from the PHP source and links each to a
   link_text      <a href="prod_main.php">Production Worksheet</a>  -> menu entry -> target file
   button_label   from form_actions.csv (optional)
   alert_message  alert("This W/S# will approve and send at next day 01:00 AM")
-  field_label    "Style No:" next to <input name="wsm_styleno"> / <?= $row['wsm_styleno'] ?>
+  field_label    "Style No:" (optionally a link: link_target/link_mode when the value is wrapped in <a href="x.php?action=..">) next to <input name="wsm_styleno"> / <?= $row['wsm_styleno'] ?>
                  (same row cell pairing, <label for>, and header-row <-> data-row pairing)
 
 Outputs (in --out):
@@ -158,14 +158,31 @@ def scan_alerts(rel, d):
 
 
 # ----------------------------------------------------------------- field labels
+def strip_anchor_attrs(raw):
+    """<a href="x.php?id=<?= $row['id'] ?>"> -> <a>: the record key in a link is not a column shown in the cell."""
+    out, i = [], 0
+    for m in re.finditer(r"<a\b", raw, re.I):
+        if m.start() < i:
+            continue
+        end = FA.scan_tag(raw, m.start())
+        if end < 0:
+            continue
+        out.append(raw[i:m.start()] + "<a>")
+        i = end + 1
+    out.append(raw[i:])
+    return "".join(out)
+
+
 def cell_info(raw, colset):
+    link_raw = raw
+    raw = strip_anchor_attrs(raw)
     masked, _ = FA.mask_php(raw)
     static = " ".join(html.unescape(TC.TAG_RE.sub(" ", re.sub(r"\x00\d+\x00", " ", masked))).replace("\u00a0", " ").split())
     refs = []
     for r in re.findall(r"\bname\s*=\s*[\"']?(\w+)", raw):
         refs.append((r, "input"))
     for var, key in re.findall(r"\$(\w+)\s*\[\s*['\"](\w+)['\"]\s*\]", raw):
-        if var not in SUPERGLOBAL or True:
+        if var not in SUPERGLOBAL:
             refs.append((key, "row_key"))
     for v in re.findall(r"\$([A-Za-z]\w*)", raw):
         refs.append((v, "php_var"))
@@ -175,17 +192,31 @@ def cell_info(raw, colset):
         if ok and col not in seen:
             seen.add(col)
             keep.append((col, el))
-    return static.strip(" :\t-"), keep, static
+    link = None                                  # <a href="page.php?action=x"> around the value -> (path, mode)
+    am = re.search(r"<a\b", link_raw, re.I)
+    if am:
+        aend = FA.scan_tag(link_raw, am.start())
+        if aend > 0:
+            href = FA.parse_tag(link_raw[am.start():aend + 1]).get("href", "")
+            pm = EL.PATH_RE.search(href)
+            if pm:
+                mm = re.search(r"[?&]action=(\w+)", href)
+                link = (pm.group(1), mm.group(1) if mm else "")
+    return static.strip(" :\t-"), keep, static, link
 
 
-def scan_field_labels(rel, d, colset, col_tables, label_for):
+def scan_field_labels(rel, d, colset, col_tables, label_for, files_lc=None, base_idx=None):
     text, starts = d["text"], d["starts"]
     out, header = [], None
 
-    def add(label, col, el, kind, line):
+    def add(label, col, el, kind, line, link=None):
         if label and has_letters(label) and len(label) <= 60 and words(label) <= 8:
+            tgt = ""
+            if link and files_lc is not None:
+                tgt = EL.resolve(rel, link[0], files_lc, base_idx)[0] or link[0]
             out.append({"label": label, "column": col, "tables": ";".join(col_tables.get(col, [])), "file": rel,
-                        "line": line, "kind": kind, "element": el})
+                        "line": line, "kind": kind, "element": el,
+                        "link_target": tgt, "link_mode": link[1] if link else ""})
 
     for rm in re.finditer(r"<tr\b", text, re.I):
         rend = FA.scan_tag(text, rm.start())
@@ -207,21 +238,21 @@ def scan_field_labels(rel, d, colset, col_tables, label_for):
             header = {i: t for i, t in labels}
             continue
         if data:
-            for i, (label, refs, _) in enumerate(cells):
+            for i, (label, refs, _, link) in enumerate(cells):
                 if refs and label and has_letters(label):                 # "Style No: <input name=..>"
                     for col, el in refs:
-                        add(label, col, el, "same_cell", line)
+                        add(label, col, el, "same_cell", line, link)
             pending = None
-            for i, (label, refs, _) in enumerate(cells):
+            for i, (label, refs, _, link) in enumerate(cells):
                 if label and not refs and has_letters(label):
                     pending = label
                 elif refs and pending:
                     for col, el in refs:
-                        add(pending, col, el, "td_next", line)
+                        add(pending, col, el, "td_next", line, link)
                     pending = None
                 elif refs and header and i in header and not (label and has_letters(label)):
                     for col, el in refs:
-                        add(header[i], col, el, "header_index", line)
+                        add(header[i], col, el, "header_index", line, link)
     for label, target, line in label_for:
         if (target in colset) if colset else True:
             add(label, target, "label_for", "label_for", line)
@@ -265,7 +296,7 @@ def main():
         rows, label_for = scan_elements(rel, d, files_lc, base_idx)
         terms.extend(rows)
         terms.extend(scan_alerts(rel, d))
-        labels.extend(scan_field_labels(rel, d, colset, col_tables, label_for))
+        labels.extend(scan_field_labels(rel, d, colset, col_tables, label_for, files_lc, base_idx))
 
     # button labels from form_actions.csv
     if args.form_actions and os.path.exists(args.form_actions):
@@ -303,8 +334,9 @@ def main():
                  [[t["term"], t["term_type"], t["confidence"], t["file"], t["line"], t["tag"], t["pattern"],
                    t["dynamic_php"], t["mode_dependent"], t["href_target"], t["php_function"], t["norm_key"]] for t in terms])
     EL.write_csv(os.path.join(args.out, "field_labels.csv"),
-                 ["label", "column", "tables", "file", "line", "kind", "element", "norm_key"],
-                 [[l["label"], l["column"], l["tables"], l["file"], l["line"], l["kind"], l["element"], l["norm_key"]] for l in labels])
+                 ["label", "column", "tables", "file", "line", "kind", "element", "link_target", "link_mode", "norm_key"],
+                 [[l["label"], l["column"], l["tables"], l["file"], l["line"], l["kind"], l["element"],
+                   l.get("link_target", ""), l.get("link_mode", ""), l["norm_key"]] for l in labels])
 
     best = {}
     for t in terms:
@@ -332,7 +364,8 @@ def main():
         b["terms"][l["label"]] += 1
         b["entries"].append({"type": "field_label", "confidence": "high", "file": l["file"], "line": l["line"],
                              "column": l["column"], "tables": l["tables"].split(";") if l["tables"] else [],
-                             "kind": l["kind"]})
+                             "kind": l["kind"],
+                             **({"link_target": l["link_target"], "link_mode": l["link_mode"]} if l.get("link_target") else {})})
     with open(os.path.join(args.out, "term_bridge.jsonl"), "w", encoding="utf-8") as f:
         for key, b in sorted(bridge.items()):
             if not key:
