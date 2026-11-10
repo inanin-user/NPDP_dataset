@@ -1,0 +1,724 @@
+﻿file,title,term_type,line,dynamic_php
+Classes/PHPExcel/Shared/JAMA/docs/example.php,Magic Square Example,heading,5,
+Classes/PHPExcel/Shared/JAMA/docs/includes/header.php,JAMA v1.0.1,page_title,5,
+Classes/PHPExcel/Shared/JAMA/examples/benchmark.php,Cholesky decomposition: $t random {$n}x{$n} matrices,bold_text,127,
+Classes/PHPExcel/Shared/JAMA/tests/TestMatrix.php,{$errorCount} total errors,bold_text,312,
+Classes/PHPExcel/Writer/HTML.php,' . htmlspecialchars($this->_phpExcel->getProperties()->getTitle()) . ',page_title,310,
+Classes/barcode/download.php,Barcode Download,page_title,3,
+Classes/barcode/home.php,Barcode home page,page_title,3,
+Classes/barcode/sample.php,Barcode Sample,page_title,3,
+Classes/phpqrcode/index.php,PHP QR Code,heading,25,
+Default-20220712-PETER.php,Presario,heading_class,133,
+Default-20220729-PETER.php,Presario,heading_class,133,
+Default.php,Presario,heading_class,133,
+Default2.php,iN and iN,heading_class,126,
+adduser.php,500 Cannot connect to database,heading,20,
+admin/SQL/bom_mas.php,Bill of Material Sheet,heading_styled,359,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/converted_page.php,Stone-Out,heading_styled,301,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/master_mmstone.php,Presario System,page_title,75,
+admin/SQL/prod_mas.php,Production WorkSheet,heading_styled,359,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/result.php,Sample WorkSheet,heading_styled,461,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/sample_mas.php,Sample WorkSheet,heading_styled,461,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/sample_srlist.php,SWS Send And Receipt Form,heading_styled,356,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/scr_sample_mas.php,Sample WorkSheet,heading_styled,340,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/stock_mas.php,Stone Transaction,heading_styled,340,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/stock_report.php,Stone Useage Report,heading_styled,331,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/stonein.php,Stone-Out,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/stonein_mas.php,Stone-In,heading_styled,351,<?=ucwords($_REQUEST['action'])?>
+admin/SQL/stoneout_mas.php,Stone-Out,heading_styled,301,<?=ucwords($_REQUEST['action'])?>
+admin/adddsgn.php,500 Cannot connect to database,heading,20,
+admin/adduser.php,500 Cannot connect to database,heading,20,
+admin/create_daily_invoice_test.php,Generate report success!,bold_text,265,
+admin/create_daily_invoice_test2.php,Generate report success!,bold_text,287,
+admin/create_mminv_daily.php,Generate report success!,bold_text,78,
+admin/create_mminv_daily_sec.php,Generate report success!,bold_text,87,
+admin/edit_pw.php,500 Cannot connect to database,heading,22,
+admin/index.php,"Welcome back,",page_title,12,<?php echo $_SESSION['adminname']?>
+admin/insert_daily_invoice_test.php,Generate report success!,bold_text,54,
+admin/insert_daily_invoice_test2.php,Generate report success!,bold_text,66,
+admin/insert_mminv2_daily.php,Generate report success!,bold_text,60,
+admin/insert_mminv2_daily_sec.php,Generate report success!,bold_text,66,
+admin/insert_mminv_daily.php,Generate report success!,bold_text,48,
+admin/insert_mminv_daily_sec.php,Generate report success!,bold_text,64,
+admin/license.php,500 Cannot connect to database,heading,1,
+admin/signin.php,500 Cannot connect to database,heading,22,
+admin/userlog.php,500 Cannot connect to database,heading,22,
+billing/UN_main.php,Maintenance,heading_styled,45,
+billing/bom_stone.php,Presario System,page_title,13,
+billing/credit_debit_main.php,Credit Note / Debit Note,heading_styled,104,
+billing/credit_debit_mas.php,Credit Note / Debit Note,heading_styled,329,<?=ucwords($_REQUEST['action'])?>
+billing/draftinvoice_blank.php,Draft Blank Invoice,heading_styled,43,<?=ucwords($_REQUEST['action'])?>
+billing/draftinvoice_findings.php,Draft Invoice - Total findings transaction (details),heading_styled,417,
+billing/draftinvoice_findings_r1.php,Draft Invoice - Total findings transaction (details),heading_styled,388,
+billing/draftinvoice_labor.php,Draft Invoice - BOM Labor,heading_styled,425,
+billing/draftinvoice_main.php,Draft Invoice Maintenance,heading_styled,278,
+billing/draftinvoice_mas-202203031.php,Draft Invoice,heading_styled,1151,<?= ucwords($_REQUEST['action']) ?>
+billing/draftinvoice_mas.php,Draft Invoice,heading_styled,1204,<?= ucwords($_REQUEST['action']) ?>
+billing/draftinvoice_mas0801.php,Draft Invoice,heading_styled,1005,<?=ucwords($_REQUEST['action'])?>
+billing/draftinvoice_stonein.php,Draft Invoice - Stone in transaction record (details),heading_styled,715,
+billing/draftinvoice_stonein0801.php,Draft Invoice - Stone in transaction record (details),heading_styled,270,
+billing/draftinvoice_stonein_r1.php,Draft Invoice - Stone in transaction record (details),heading_styled,783,
+billing/draftinvoice_totalwt.php,Draft Invoice - Total Metal Weight,heading_styled,301,
+billing/draftinvoice_totalwt0801.php,Draft Invoice - Total Metal Weight,heading_styled,303,
+billing/draftinvoice_totalwt2.php,Draft Invoice - Total Metal Weight,heading_styled,313,
+billing/draftinvoice_totalwt_r1.php,Draft Invoice - Total Metal Weight,heading_styled,307,
+billing/emergency_invoice.php,Emergency Invoice,heading_styled,19,
+billing/emergency_invoice_mas.php,Emergancy Invoice,heading_styled,111,<?= ucwords($_REQUEST['action']) ?>
+billing/ftyinvoice_main-202205121.php,Invoice For Fty Maintenance,heading_styled,128,
+billing/ftyinvoice_main.php,Invoice For Fty Maintenance,heading_styled,148,
+billing/ftyinvoice_mas.php,Invoice For Fty - Add,heading_styled,48,
+billing/ftyinvoice_mas0801.php,Invoice For Fty - Add,heading_styled,48,
+billing/invoice_main.php,Invoice Maintenance,heading_styled,153,
+billing/invoice_mas.php,Invoice - Add,heading_styled,48,
+billing/invoice_mas0801.php,Invoice - Add,heading_styled,48,
+billing/pdp_invoice_main.php,Create Invoice,heading_styled,122,
+billing/pdp_invoice_mas.php,Create Invoice,heading_styled,243,<?= ucwords($_REQUEST['action']) ?>
+billing/rtninvoice_main.php,Returned & broken material Invoice Maintenance,heading_styled,126,
+billing/rtninvoice_mas-20220620-PETER.php,Returned & broken Material Invoice,heading_styled,276,<?= ucwords($_REQUEST['action']) ?>
+billing/rtninvoice_mas.php,Returned & broken Material Invoice,heading_styled,294,<?= ucwords($_REQUEST['action']) ?>
+billing/rtninvoice_stonein.php,Invoice - Stone in transaction record (details),heading_styled,516,
+billing/sample_stone.php,Presario System,page_title,75,
+billing/shipment_logic.php,Multi Draft,heading_styled,251,<?=ucwords($_REQUEST['action'])?>
+billing/shipment_logic_main.php,Multi Draft,heading_styled,112,
+billing/vendor_main.php,Vendor Profile Maintenance,heading_styled,43,
+billing/vendor_mas.php,Vendor Maintenance,heading_styled,152,"<?=$_REQUEST['action']==""modify""?""Modify"":""Add""?>"
+billing/vendor_pricing.php,Vendor Maintenance - Pricing Structure,heading_styled,112,
+billing/viewbom.php,Bill of Material Sheet,heading_styled,351,<?=ucwords($_REQUEST['action'])?>
+billing/viewsws.php,WorkSheet Info,heading_styled,565,
+changepassword.php,iN and iN,heading_class,54,
+common/config.php,500 Cannot connect to database,heading,37,
+common/config_8286.php,500 Cannot connect to database,heading,36,
+common/config_8287.php,500 Cannot connect to database,heading,32,
+common/config_8288.php,500 Cannot connect to database,heading,32,
+common/config_8288_20170925_ChangeDSDB.php,500 Cannot connect to database,heading,48,
+common/config_8288_20170925_beforeChangeDSDB.php,500 Cannot connect to database,heading,32,
+common/config_for_login.php,500 Cannot connect to database,heading,32,
+common/config_local.php,500 Cannot connect to database,heading,25,
+common/plugin/header.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+common/plugin2/header.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+common/stonein_mas.php,Stone-In,heading_styled,896,<?= ucwords($_REQUEST['action']) ?>
+common/xconfig.php,500 Cannot connect to database,heading,37,
+controller/billing/covernote/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,50,
+controller/misc/profile/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/misc/setup.php,"""; $model->alterTable($area_value['table'], $field); echo """,bold_text,22,
+controller/misc/setup/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/prepro/bom/view/bomstone.php,P. D. & P. Ltd. Mini Systems,page_title,250,
+controller/prepro/bom/view/bomstonesum.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+controller/prepro/bom/view/edit.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+controller/prepro/bom/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,64,
+controller/prepro/mms/view/index.php,Model Making Sheet Import,heading_styled,4,
+controller/pro/casting/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,18,
+controller/pro/ws/view/pows_index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,63,
+controller/report - __/metalneed/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/report - __/shippinginfo/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report - __/shippinginfo_v7/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report - __/shippinginfo_v8/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report - __/stock - Copy/view/index.php,Search Options,bold_text,112,
+controller/report - __/stock - Copy/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report - __/stock/view/index.php,Search Options,bold_text,112,
+controller/report - __/stock/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/custship/view/bomstone.php,P. D. & P. Ltd. Mini Systems,page_title,250,
+controller/report/custship/view/bomstonesum.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+controller/report/custship/view/edit.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+controller/report/custship/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,64,
+controller/report/custship/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/report/metalneed/view/bomstone.php,P. D. & P. Ltd. Mini Systems,page_title,250,
+controller/report/metalneed/view/bomstonesum.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+controller/report/metalneed/view/edit.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+controller/report/metalneed/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,64,
+controller/report/metalneed/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,18,
+controller/report/metalneed_20220715-PETER/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/report/metalneedsum/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller/report/shippinginfo/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/shippinginfo_v7/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/shippinginfo_v8/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/shippinginfo_v9/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/stock - Copy/view/index.php,Search Options,bold_text,112,
+controller/report/stock - Copy/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/report/stock/view/index.php,Search Options,bold_text,112,
+controller/report/stock/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/stone/declaration/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,62,
+controller/stone/stock - Copy/view/add.php,Customer / supplier inv no.,bold_text,221,
+controller/stone/stock - Copy/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,55,
+controller/stone/stock - Copy/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller/stone/stock/view/add.php,Customer / supplier inv no.,bold_text,234,
+controller/stone/stock/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,54,
+controller/stone/stock/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller/stone/stock2/view/add.php,Customer / supplier inv no.,bold_text,221,
+controller/stone/stock2/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,54,
+controller/stone/stock2/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller/stone/stoneshortcut/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/stone/wsstock/view/index.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,51,
+controller/stone/wsstock/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/view/_header.php,P. D. & P. Ltd. Mini Systems,page_title,12,
+controller/view/_index_list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,51,
+controller/view/d_note/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,65,
+controller/view/d_note2/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,64,
+controller/view/fty/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,30,
+controller/view/fty/modify.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+controller/view/header.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+controller/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller/view/mms/index.php,Model Making Sheet 3.0,heading_styled,14,
+controller/view/p_bom/add.php,P - BOM,heading_styled,12,<?= $action ?>
+controller/view/p_bom/edit.php,P - BOM,heading_styled,451,<?= $action ?>
+controller/view/p_bom/index.php,P - Bill of Material Maintenance,heading_styled,14,
+controller/view/p_bom/modify.php,P - BOM,heading_styled,451,<?= $action ?>
+controller_r1/billing/covernote/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,50,
+controller_r1/prepro/mms/view/index.php,Model Making Sheet Import,heading_styled,14,
+controller_r1/pro/ws/view/pows_index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,63,
+controller_r1/stone/declaration/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,62,
+controller_r1/stone/stock/view/add.php,Customer / supplier inv no.,bold_text,221,
+controller_r1/stone/stock/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,54,
+controller_r1/view/d_note/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,64,
+controller_r1/view/fty/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,30,
+controller_r1/view/fty/modify.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+controller_r1/view/header.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+controller_r1/view/mms/index.php,Model Making Sheet 3.0,heading_styled,14,
+controller_r1/view/p_bom/add.php,P - BOM,heading_styled,12,<?= $action ?>
+controller_r1/view/p_bom/edit.php,P - BOM,heading_styled,451,<?= $action ?>
+controller_r1/view/p_bom/index.php,P - Bill of Material Maintenance,heading_styled,14,
+controller_r1/view/p_bom/modify.php,P - BOM,heading_styled,451,<?= $action ?>
+controller_r2/billing/covernote/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,50,
+controller_r2/prepro/mms/view/index.php,Model Making Sheet Import,heading_styled,14,
+controller_r2/pro/ws/view/pows_index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,63,
+controller_r2/report/metalneed/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,17,
+controller_r2/report/shippinginfo/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller_r2/stone/declaration/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,62,
+controller_r2/stone/stock - Copy/view/add.php,Customer / supplier inv no.,bold_text,221,
+controller_r2/stone/stock - Copy/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,55,
+controller_r2/stone/stock - Copy/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller_r2/stone/stock/view/add.php,Customer / supplier inv no.,bold_text,234,
+controller_r2/stone/stock/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,54,
+controller_r2/stone/stock/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller_r2/stone/stock2/view/add.php,Customer / supplier inv no.,bold_text,221,
+controller_r2/stone/stock2/view/index.php,""" . ($start + 1) . "" - "" . ($start + $total) . """,bold_text,54,
+controller_r2/stone/stock2/view/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+controller_r2/stone/stoneshortcut/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller_r2/view/_header.php,P. D. & P. Ltd. Mini Systems,page_title,12,
+controller_r2/view/_index_list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,51,
+controller_r2/view/d_note/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,64,
+controller_r2/view/fty/index.php,""" . ($start + 1) . "" - "" . ($start + $no_of_list) . """,bold_text,30,
+controller_r2/view/fty/modify.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+controller_r2/view/header.php,P. D. & P. Ltd. Mini Systems,page_title,7,
+controller_r2/view/list.php,""" . ($start + 1) . "" - "" . ($start + 15) . """,bold_text,46,
+controller_r2/view/mms/index.php,Model Making Sheet 3.0,heading_styled,14,
+controller_r2/view/p_bom/add.php,P - BOM,heading_styled,12,<?= $action ?>
+controller_r2/view/p_bom/edit.php,P - BOM,heading_styled,451,<?= $action ?>
+controller_r2/view/p_bom/index.php,P - Bill of Material Maintenance,heading_styled,14,
+controller_r2/view/p_bom/modify.php,P - BOM,heading_styled,451,<?= $action ?>
+crm/application/core/checkaction/views/index.php,No record found!,heading_class,39,
+crm/application/core/pdp/controllers/pdpcontroller.php,Input Data Checking by CRM,bold_text,265,
+crm/application/core/pdp/controllers/pdpcontroller_v1.1.php,Input Data Checking by CRM,bold_text,245,
+crm/application/core/pdp_v1/controllers/pdpcontroller.php,Input Data Checking by CRM,bold_text,187,
+crm/application/core/pdp_v1/controllers/pdpcontroller_v1.1.php,Input Data Checking by CRM,bold_text,245,
+crm/application/core/pdpupload/controllers/pdpuploadcontroller.php,Input Data Checking by CRM,bold_text,182,
+discuss/PHPMailer/class.phpmailer.php,"' . $this->getMessage() . """,bold_text,2316,
+discuss/PHPMailer/test/phpmailerTest.php,test message,bold_text,372,
+discuss/PHPMailer/test/test_callback.php,PHPMailer Lite - DKIM and Callback Function test,page_title,3,
+discuss/discuss.php,Discussion Board,heading_styled,27,
+discuss/discuss_main.php,Discussion Board,heading_styled,27,
+discuss/replydel_pass.php,Discussion Board,heading_styled,26,
+discuss/replymanage_pass.php,Discussion Board,heading_styled,26,
+discuss/replymodify.php,Discussion Board,heading_styled,26,
+discuss/smtp_main.php,System Mail Setting,heading_styled,28,
+discuss/smtp_mas.php,System Mail Setting - Modify,heading_styled,77,
+discuss/topic.php,Discussion Board,heading_styled,25,
+discuss/topicdel_pass.php,Discussion Board,heading_styled,26,
+discuss/topicmanage_pass.php,Discussion Board,heading_styled,26,
+discuss/topicmodify.php,Discussion Board,heading_styled,26,
+dompdf/include/dompdf.cls.php,DOMPDF Warnings,bold_text,687,
+dompdf/www/debugger.php,dompdf debugger,page_title,8,
+dompdf/www/demo.php,Demo,heading,28,
+dompdf/www/examples.php,Samples,heading,29,
+dompdf/www/head.inc,dompdf - The PHP 5 HTML to PDF Converter,page_title,12,
+dompdf/www/index.php,Overview,heading,4,
+dompdf/www/setup.php,Setup,heading,4,
+function/fty_label_main.php,FTY Label Print Form,heading_styled,68,
+function/fty_label_mas.php,FTY Label Print Form,heading_styled,440,
+function/gold_assi_mws.php,Gold assignment report for MWS,heading_styled,477,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/gold_assi_mws0608.php,Gold assignment report for MWS,heading_styled,319,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/gold_assi_mws_main.php,Gold assignment Report for mws,heading_styled,94,
+function/gold_assi_mws_main0608.php,Gold assignment Report for mws,heading_styled,44,
+function/gold_assi_pws.php,Gold assignment report for PWS,heading_styled,477,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/gold_assi_pws0608.php,Gold assignment report for pws,heading_styled,317,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/gold_assi_pws_main.php,Gold assignment Report for pws,heading_styled,94,
+function/gold_assi_pws_main0608.php,Gold assignment Report for PWS,heading_styled,44,
+function/invoice_audit.php,Audit Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_audit_main.php,Audit Report,heading_styled,97,
+function/invoice_daily.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_his.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_his_main.php,Daily Invoice Report,heading_styled,97,
+function/invoice_daily_his_test_main.php,Daily Invoice Report,heading_styled,97,
+function/invoice_daily_main.php,Daily Invoice Report,heading_styled,97,
+function/invoice_daily_test-202205251.php,Daily Invoice Report,heading_styled,461,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test2-202203301.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test2-202205251.php,Daily Invoice Report,heading_styled,465,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test2.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test2_main.php,Daily Invoice Report,heading_styled,97,
+function/invoice_daily_test_his.php,Daily Invoice Report,heading_styled,297,<?=ucwords($_REQUEST['action'])?>
+function/invoice_daily_test_main.php,Daily Invoice Report,heading_styled,97,
+function/invoice_monthly.php,Monthly Invoice Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/invoice_monthly_his.php,Monthly Invoice Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/invoice_monthly_his_main.php,Monthly Invoice Report,heading_styled,89,
+function/invoice_monthly_main.php,Monthly Invoice Report,heading_styled,89,
+function/invoice_monthly_test.php,Monthly Invoice Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/invoice_monthly_test2.php,Monthly Invoice Report,heading_styled,267,<?=ucwords($_REQUEST['action'])?>
+function/invoice_monthly_test2_main.php,Monthly Invoice Report,heading_styled,89,
+function/invoice_monthly_test_main.php,Monthly Invoice Report,heading_styled,89,
+function/invoice_posting_functions.php,""" . $cur_page . """,bold_text,204,
+function/invoice_posting_mas.php,Invoice Posting Maintenance,heading_styled,198,
+function/material_cust_daily.php,Estimation Material Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/material_cust_daily_main.php,Daily Estimation Material Report,heading_styled,98,
+function/material_cust_daily_main_cust.php,Daily Estimation Material Report,heading_styled,107,
+function/material_cust_monthly.php,Monthly Estimation Material Report,heading_styled,98,
+function/material_cust_monthly_main.php,Monthly Estimation Material Report,heading_styled,103,
+function/material_cust_monthly_main_today.php,Monthly Estimation Material Report (Month to day),heading_styled,103,
+function/material_cust_monthly_today.php,Monthly Estimation Material Report (Month to day),heading_styled,98,
+function/material_cust_yearly.php,Year Estimation Material Report,heading_styled,99,
+function/material_cust_yearly_main.php,Year Estimation Material Report,heading_styled,104,
+function/material_cust_yearly_main_today.php,Year Estimation Material Report (year to day),heading_styled,105,
+function/material_cust_yearly_today.php,Year Estimation Material Report (year to day),heading_styled,106,
+function/metal_lock_report_main.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+function/metal_lock_report_mas.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+function/metal_lock_report_mas_year_to_date_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+function/metal_need_report_main_pdp.php,Daily Metal Need Report,heading_styled,13,<?=$cocode?>
+function/metal_need_report_main_vendor.php,Daily Metal Need Report - Vendor,heading_styled,16,
+function/metal_need_report_main_weekly_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+function/metal_need_report_main_weekly_vendor.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+function/metal_need_report_main_yearly_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+function/metal_need_report_main_yearly_vendor.php,P. D. & P. Ltd. Mini Systems,page_title,8,
+function/metal_need_report_mas_monthly_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_vendor.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_weekly_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_weekly_vendor.php,P. D. & P. Ltd. Mini Systems,page_title,9,
+function/metal_need_report_mas_yearly_pdp.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_yearly_ps.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+function/metal_need_report_mas_yearly_vendor.php,P. D. & P. Ltd. Mini Systems,page_title,9,
+function/metal_weight.php,Metal & Stone Weight Report,heading_styled,163,
+function/metal_weight_main.php,Metal & Stone Weight Report,heading_styled,94,
+function/mminv2_daily.php,Daily MM Inv Summarized Report,heading_styled,158,<?=ucwords($_REQUEST['action'])?>
+function/mminv2_daily_main.php,Daily MM Inv Summarized Report,heading_styled,97,
+function/mminv2_daily_sec.php,Daily MM Inv Summarized Report,heading_styled,158,<?=ucwords($_REQUEST['action'])?>
+function/mminv2_daily_sec_main.php,Daily MM Inv Summarized Report,heading_styled,97,
+function/mminv2_monthly.php,Monthly MM Inv Summarized Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/mminv2_monthly_main.php,Monthly MM Inv Summarized Report,heading_styled,89,
+function/mminv2_monthly_sec.php,Monthly MM Inv Summarized Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/mminv2_monthly_sec_main.php,Monthly MM Inv Summarized Report,heading_styled,89,
+function/mminv_daily.php,Daily Model Maker MM Inv Summarized Report,heading_styled,158,<?=ucwords($_REQUEST['action'])?>
+function/mminv_daily_main.php,Daily Model Maker MM Inv Summarized Report,heading_styled,97,
+function/mminv_daily_sec.php,Daily Model Maker MM Inv Summarized Report,heading_styled,158,<?=ucwords($_REQUEST['action'])?>
+function/mminv_daily_sec_main.php,Daily Model Maker MM Inv Summarized Report,heading_styled,97,
+function/mminv_monthly.php,Monthly Model Maker MM Inv Summarized Report,heading_styled,228,<?=ucwords($_REQUEST['action'])?>
+function/mminv_monthly_main.php,Monthly Model Maker MM Inv Summarized Report,heading_styled,89,
+function/mminv_monthly_sec.php,Monthly Model Maker MM Inv Summarized Report,heading_styled,232,<?=ucwords($_REQUEST['action'])?>
+function/mminv_monthly_sec_main.php,Monthly Model Maker MM Inv Summarized Report,heading_styled,89,
+function/monthly_draft_invoice_main.php,Monthly Invoice Report,heading_styled,153,
+function/non_complete_mms.php,Non completed report for MMS,heading_styled,255,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_mms_main.php,Non completed Report for MMS,heading_styled,44,
+function/non_complete_mws.php,Non completed report for mws,heading_styled,290,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_mws0801.php,Non completed report for mws,heading_styled,290,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_mws120608.php,Non completed report for MWS,heading_styled,291,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_mws_main.php,Non completed Report for MWS,heading_styled,44,
+function/non_complete_pws.php,Non completed report for PWS,heading_styled,294,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_pws120608.php,Non completed report for PWS,heading_styled,290,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_pws_main.php,Non completed Report for PWS,heading_styled,44,
+function/non_complete_sws.php,Non completed report for sws,heading_styled,292,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_sws120608.php,Non completed report for SWS,heading_styled,288,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+function/non_complete_sws_main.php,Non completed Report for SWS,heading_styled,44,
+function/qc bak/qc_entryform.php,QC entry Form,heading_styled,145,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc bak/qc_entryform_mws.php,QC entry Form,heading_styled,145,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc bak/qc_entryform_sws.php,QC entry Form,heading_styled,145,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform.php,QC entry Form,heading_styled,185,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform0802.php,QC entry Form,heading_styled,157,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform_main.php,QC entry Form for PWS,heading_styled,87,
+function/qc_entryform_mws.php,QC entry Form,heading_styled,179,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform_mws0802.php,QC entry Form,heading_styled,157,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform_mws_main.php,QC entry Form for MWS,heading_styled,86,
+function/qc_entryform_rws_main.php,QC entry Form for MWS,heading_styled,86,
+function/qc_entryform_sws.php,QC entry Form,heading_styled,179,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform_sws0802.php,QC entry Form,heading_styled,157,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+function/qc_entryform_sws_main.php,QC entry Form for SWS,heading_styled,85,
+function/shipdate_adjust_form_functions.php,""" . $cur_page . """,bold_text,202,
+function/shipdate_adjust_form_main.php,Shipdate Adjustment Form Maintenance,heading_styled,146,
+function/shipdate_adjust_form_mas.php,Shipdate Adjustment Form,heading_styled,167,<?php echo $method; ?>
+get.php,Redesign Systems,page_title,5,
+index.php,Presario,heading_class,108,
+index_mac.php,iN and iN,heading_class,96,
+invoice_main.php,Invoice Maintenance,heading_styled,137,
+metal_weight.php,Metal & Stone Weight Report,heading_styled,615,
+mini/browse.php,Design,heading_styled,159,
+mini/design_main.php,Design Maintenance,heading_styled,125,
+mini/design_mas.php,Design Maintenance - Add,heading_styled,174,
+mini/editDraft.php,Design - Catalog,heading_styled,186,
+mini/search.php,Design - Search,heading_styled,163,
+misc/bak/billingFunc_mas.php,Department Maintenance - Access Scruity,heading_styled,29,
+misc/bak/designFunc_mas.php,Access Function Security,heading_styled,30,
+misc/bak/miscFunc_mas.php,Department Maintenance - Access Scruity,heading_styled,29,
+misc/bak/preproFunc_mas.php,Department Maintenance - Access Scruity,heading_styled,29,
+misc/bak/stoneFunc_mas.php,Department Maintenance - Access Scruity,heading_styled,29,
+misc/catprint_main.php,Print Design Catalog,heading_styled,21,
+misc/catprintstyle_main.php,Print Style Catalog,heading_styled,21,
+misc/cust_main.php,Customer Profile Maintenance,heading_styled,71,
+misc/cust_mas.php,Customer Maintenance,heading_styled,171,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+misc/cust_pricing.php,Customer Maintenance - Pricing Structure,heading_styled,112,
+misc/custdiatol_main.php,Cust Gold Wt Tolerance,heading_styled,39,
+misc/custdiatol_mas.php,Customer Gold Weight Tolerance for Invoice Maintenance,heading_styled,87,<?=ucwords($_REQUEST['action'])?>
+misc/custgoldtol_main.php,Cust Gold Wt Tolerance,heading_styled,39,
+misc/custgoldtol_mas.php,Customer Gold Weight Tolerance for Invoice Maintenance,heading_styled,87,<?=ucwords($_REQUEST['action'])?>
+misc/custlabor_main.php,Customer Labor Chart Maintenance,heading_styled,31,
+misc/custlabor_mas.php,Customer Labour Chart Maintenance - Add,heading_styled,298,
+misc/custmetal_main.php,Customer Metal Data Maintenance,heading_styled,62,
+misc/custmetal_mas.php,Customer Metal Maintenance,heading_styled,91,"<?=$_REQUEST['action']==""modify""?""Modify"":""Add""?>"
+misc/departmentPage_mas.php,Group Maintenance - Add,heading_styled,32,
+misc/department_main.php,Group Maintenance,heading_styled,57,
+misc/department_mas.php,Group Maintenance - Add,heading_styled,58,
+misc/deptfunc_main.php,Assign Security Maintenance,heading_styled,21,
+misc/designer_main.php,Designer Code Sheet,heading_styled,40,
+misc/designer_mas.php,Designer Code Sheet - Modify,heading_styled,133,
+misc/findings_main.php,Findings Maintenance,heading_styled,69,
+misc/findings_mas.php,Findings Maintenance - Add,heading_styled,79,
+misc/labor_main.php,Labor Code Maintenance,heading_styled,64,
+misc/labor_mas.php,Labor Code Maintenance,heading_styled,157,<?=ucwords($_REQUEST['action'])?>
+misc/mcode_main.php,Metal Code Maintenance,heading_styled,69,
+misc/mcode_mas.php,Metal Maintenance - Add,heading_styled,78,
+misc/mcolor_main.php,Metal Color Maintenance,heading_styled,64,
+misc/mcolor_mas.php,Metal Color Maintenance,heading_styled,87,<?=ucwords($_REQUEST['action'])?>
+misc/mld_main.php,Metal lock data Maintenance,heading_styled,56,
+misc/mld_mas.php,Metal lock data Maintenance - Modify,heading_styled,217,
+misc/omd_main.php,Other Metal lock data Maintenance,heading_styled,42,
+misc/omd_main2.php,lock data Maintenance,heading_styled,57,<?=ucfirst(strtolower($_REQUEST['omd_name']))?>
+misc/omd_mas.php,Metal lock data Maintenance - Modify,heading_styled,121,
+misc/prodcat_main.php,Product Category Maintenance,heading_styled,65,
+misc/prodcat_mas.php,Product Category Maintenance - Modify,heading_styled,133,
+misc/quality_main.php,Quality Maintenance,heading_styled,69,
+misc/quality_mas.php,Quality Maintenance - Add,heading_styled,98,
+misc/repairnote_main.php,Repair Note Maintenance,heading_styled,37,
+misc/repairnote_mas.php,Repair Note Maintenance - Add,heading_styled,230,
+misc/scolor_main.php,Stone Color Maintenance,heading_styled,39,
+misc/scolor_mas.php,Stone Color Maintenance,heading_styled,87,<?=ucwords($_REQUEST['action'])?>
+misc/security/billing/scr_draftinvoice_labor.php,Draft Invoice - BOM Labor,heading_styled,61,
+misc/security/billing/scr_draftinvoice_mas.php,Draft Invoice,heading_styled,63,<?=ucwords($_REQUEST['action'])?>
+misc/security/billing/scr_draftinvoice_metal_weight.php,Draft Invoice - Total Metal Weight,heading_styled,67,
+misc/security/billing/scr_ftyinvoice_mas.php,Fty Invoice - Modify,heading_styled,59,"<?php if(substr($rows['ivm_invno'],0,1) == ""B"") echo ""Billing""; elseif(substr($rows['ivm_invno'],0,1) == ""C"") echo ""Customs""; else echo ""Shipping""; ?>"
+misc/security/billing/scr_invoice_mas.php,Invoice - Modify,heading_styled,59,"<?php if(substr($rows['ivm_invno'],0,1) == ""B"") echo ""Billing""; elseif(substr($rows['ivm_invno'],0,1) == ""C"") echo ""Customs""; else echo ""Shipping""; ?>"
+misc/security/billing/scr_rtninvoice_mas.php,Returned & broken Material Invoice - Modify,heading_styled,63,
+misc/security/function/gold_assi_mws.php,Gold assignment report for MWS,heading_styled,93,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/gold_assi_pws.php,Gold assignment report for PWS,heading_styled,93,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/gold_assi_rws.php,Gold assignment report for RWS,heading_styled,93,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/non_complete_mms.php,Non completed report for MMS,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/non_complete_mws.php,Non completed report for MWS,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/non_complete_pws.php,Non completed report for pws,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/non_complete_rws.php,Non completed report for RWS,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/non_complete_sws.php,Non completed report for sws,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security/function/promdate_mws.php,Prom. Shipdate for MWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security/function/promdate_pws.php,Prom. Shipdate for PWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security/function/promdate_rws.php,Prom. Shipdate for RWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security/function/promdate_sws.php,Prom. Shipdate for SWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security/function/qc_entryform.php,QC entry Form,heading_styled,92,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/function/qc_entryform1.php,QC entry Form,heading_styled,103,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/function/qc_entryform_mws.php,QC entry Form,heading_styled,64,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/function/qc_entryform_rws.php,QC entry Form,heading_styled,61,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/function/qc_entryform_sws.php,QC entry Form,heading_styled,64,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/prepro/scr_bom_mas.php,Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_bom_pop.php,Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_design_mas.php,Security Setting - Design Maintenance,heading_styled,56,
+misc/security/prepro/scr_ebom_mas.php,ESTIMATE Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_ebom_pop.php,ESTIMATE Bill of Material Sheet - SECURITY,heading_styled,228,
+misc/security/prepro/scr_master_mas.php,Master WorkSheet - Security,heading_styled,73,
+misc/security/prepro/scr_master_pop.php,Master Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_mdoel_invbymaker.php,Model Making Invoice from The Model Maker,heading_styled,86,
+misc/security/prepro/scr_model_approval.php,Model Breakdown Approval Form,heading_styled,81,
+misc/security/prepro/scr_model_mas.php,Model Making Sheet,heading_styled,109,
+misc/security/prepro/scr_model_mminv.php,PDP MM Invoice,heading_styled,130,
+misc/security/prepro/scr_model_pfform.php,Model Promised Finished Form,heading_styled,100,
+misc/security/prepro/scr_model_pop.php,Model Making Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_model_trl.php,Model Transaction Record Form,heading_styled,108,
+misc/security/prepro/scr_model_vadeform.php,Model Making And Vendor Assignment data entry Form,heading_styled,102,
+misc/security/prepro/scr_releasebom_mas.php,BOM Release Checker Form,heading_styled,139,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security/prepro/scr_repair_mas.php,Master WorkSheet - Security,heading_styled,73,
+misc/security/prepro/scr_repair_pop.php,Repair Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_sample_draft_mas.php,Sample WorkSheet - Security,heading_styled,73,
+misc/security/prepro/scr_sample_draft_pop.php,Sample Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_sample_mas.php,Sample WorkSheet - Security,heading_styled,73,
+misc/security/prepro/scr_sample_pop.php,Sample Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security/prepro/scr_sample_srlist.php,SWS Send And Receipt Form - Security,heading_styled,72,
+misc/security/pro/scr_prod_draft_mas.php,Draft Production WorkSheet - Security,heading_styled,73,
+misc/security/pro/scr_prod_draft_pop.php,Draft Production Worksheet Sheet - SECURITY,heading_styled,263,
+misc/security/pro/scr_prod_mas.php,Draft Production Worksheet / Production WorkSheet - Security,heading_styled,73,
+misc/security/pro/scr_prod_pop.php,Production Worksheet Sheet - SECURITY,heading_styled,263,
+misc/security/pro/src_model_invbymaker.php,Model Making Invoice from The Model Maker,heading_styled,121,
+misc/security/stone/scr_srt_mas.php,Security Setting - Returned & broken material,heading_styled,48,
+misc/security/stone/scr_stock_mas.php,Stock Report,heading_styled,65,<?=ucwords($_REQUEST['action'])?>
+misc/security/stone/scr_stock_report.php,Stone Useage Report,heading_styled,73,<?=ucwords($_REQUEST['action'])?>
+misc/security/stone/scr_stonein_mas.php,Stone-In,heading_styled,73,<?=ucwords($_REQUEST['action'])?>
+misc/security/stone/scr_stoneout_mas.php,Stone-Out,heading_styled,72,<?=ucwords($_REQUEST['action'])?>
+misc/security2/billing/scr_draftinvoice_labor.php,Draft Invoice - BOM Labor,heading_styled,61,
+misc/security2/billing/scr_draftinvoice_mas.php,Draft Invoice,heading_styled,63,<?=ucwords($_REQUEST['action'])?>
+misc/security2/billing/scr_draftinvoice_metal_weight.php,Draft Invoice - Total Metal Weight,heading_styled,67,
+misc/security2/billing/scr_ftyinvoice_mas.php,Fty Invoice - Modify,heading_styled,59,"<?php if(substr($rows['ivm_invno'],0,1) == ""B"") echo ""Billing""; elseif(substr($rows['ivm_invno'],0,1) == ""C"") echo ""Customs""; else echo ""Shipping""; ?>"
+misc/security2/billing/scr_invoice_mas.php,Invoice - Modify,heading_styled,59,"<?php if(substr($rows['ivm_invno'],0,1) == ""B"") echo ""Billing""; elseif(substr($rows['ivm_invno'],0,1) == ""C"") echo ""Customs""; else echo ""Shipping""; ?>"
+misc/security2/billing/scr_rtninvoice_mas.php,Returned & broken Material Invoice - Modify,heading_styled,63,
+misc/security2/function/gold_assi_mws.php,Gold assignment report for MWS,heading_styled,93,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/gold_assi_pws.php,Gold assignment report for PWS,heading_styled,93,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/non_complete_mms.php,Non completed report for MMS,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/non_complete_mms0801.php,Non completed report for MMS,heading_styled,74,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/non_complete_mws.php,Non completed report for MWS,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/non_complete_pws.php,Non completed report for pws,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/non_complete_sws.php,Non completed report for sws,heading_styled,76,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+misc/security2/function/promdate_mws.php,Prom. Shipdate for MWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security2/function/promdate_pws.php,Prom. Shipdate for PWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security2/function/promdate_sws.php,Prom. Shipdate for SWS,heading_styled,91,<?=ucwords($_REQUEST['action'])?>
+misc/security2/function/qc_entryform.php,QC entry Form,heading_styled,92,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security2/function/qc_entryform1.php,QC entry Form,heading_styled,103,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security2/function/qc_entryform_mws.php,QC entry Form,heading_styled,64,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security2/function/qc_entryform_sws.php,QC entry Form,heading_styled,64,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security2/prepro/scr_bom_mas.php,Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_bom_pop.php,Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_design_mas.php,Security Setting - Design Maintenance,heading_styled,56,
+misc/security2/prepro/scr_ebom_mas.php,ESTIMATE Bill of Material Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_ebom_pop.php,ESTIMATE Bill of Material Sheet - SECURITY,heading_styled,228,
+misc/security2/prepro/scr_master_mas.php,Master WorkSheet - Security,heading_styled,73,
+misc/security2/prepro/scr_master_pop.php,Master Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_mdoel_invbymaker.php,Model Making Invoice from The Model Maker,heading_styled,86,
+misc/security2/prepro/scr_model_approval.php,Model Breakdown Approval Form,heading_styled,81,
+misc/security2/prepro/scr_model_mas.php,Model Making Sheet,heading_styled,109,
+misc/security2/prepro/scr_model_mminv.php,PDP MM Invoice,heading_styled,130,
+misc/security2/prepro/scr_model_pfform.php,Model Promised Finished Form,heading_styled,100,
+misc/security2/prepro/scr_model_pop.php,Model Making Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_model_trl.php,Model Transaction Record Form,heading_styled,108,
+misc/security2/prepro/scr_model_vadeform.php,Model Making And Vendor Assignment data entry Form,heading_styled,102,
+misc/security2/prepro/scr_releasebom_mas.php,BOM Release Checker Form,heading_styled,139,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+misc/security2/prepro/scr_sample_draft_mas.php,Draft cSample WorkSheet - Security,heading_styled,73,
+misc/security2/prepro/scr_sample_draft_pop.php,Draft Sample Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_sample_mas.php,Sample WorkSheet - Security,heading_styled,73,
+misc/security2/prepro/scr_sample_pop.php,Sample Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security2/prepro/scr_sample_srlist.php,SWS Send And Receipt Form - Security,heading_styled,72,
+misc/security2/pro/scr_prod_draft_mas.php,Draft Production WorkSheet - Security,heading_styled,73,
+misc/security2/pro/scr_prod_draft_pop.php,Draft Production Worksheet Sheet - SECURITY,heading_styled,263,
+misc/security2/pro/scr_prod_mas.php,Production WorkSheet - Security,heading_styled,73,
+misc/security2/pro/scr_prod_pop.php,Production Worksheet Sheet - SECURITY,heading_styled,260,
+misc/security2/pro/src_model_invbymaker.php,Model Making Invoice from The Model Maker,heading_styled,121,
+misc/security2/stone/scr_srt_mas.php,Security Setting - Returned & broken material,heading_styled,48,
+misc/security2/stone/scr_stock_mas.php,Stone Transaction,heading_styled,65,<?=ucwords($_REQUEST['action'])?>
+misc/security2/stone/scr_stock_report.php,Stone Useage Report,heading_styled,73,<?=ucwords($_REQUEST['action'])?>
+misc/security2/stone/scr_stonein_mas.php,Stone-In,heading_styled,73,<?=ucwords($_REQUEST['action'])?>
+misc/security2/stone/scr_stoneout_mas.php,Stone-Out,heading_styled,72,<?=ucwords($_REQUEST['action'])?>
+misc/settype_main.php,Setting Type Maintenance,heading_styled,71,
+misc/settype_mas.php,Setting Type Maintenance - Add,heading_styled,88,
+misc/shape_main.php,Shape Maintenance,heading_styled,69,
+misc/shape_mas.php,Shape Maintenance - Add,heading_styled,82,
+misc/size_main.php,Size Maintenance,heading_styled,69,
+misc/size_mas.php,Size Maintenance - Add,heading_styled,97,
+misc/stone_main.php,Product Code Maintenance,heading_styled,69,
+misc/stone_mas.php,Product Code Maintenance - Add,heading_styled,82,
+misc/styledetail.php,Style Profile,heading_styled,48,
+misc/styledetail_main.php,Style Profile Maintenance,heading_styled,46,
+misc/styledetail_mas.php,Style Profile,heading_styled,124,
+misc/supplier_main.php,Supplier Maintenance,heading_styled,39,
+misc/supplier_mas.php,Supplier Maintenance,heading_styled,87,<?=ucwords($_REQUEST['action'])?>
+misc/userlist_copy_mas.php,User Maintenance - Copy User Account,heading_styled,14,
+misc/userlist_main.php,User Maintenance,heading_styled,79,
+misc/userlist_mas.php,User Maintenance,heading_styled,2812,"<?= ($_REQUEST['action'] == ""add"" ? ""Add"" : ""Modify"") ?>"
+misc/userlist_mas_BACKUP.php,User Maintenance,heading_styled,662,"<?=($_REQUEST['action']==""add""?""Add"":""Modify"")?>"
+misc/userlist_securitytable.php,Untitled Document,page_title,39,
+misc/vendor_main.php,Vendor Profile Maintenance,heading_styled,78,
+misc/vendor_mas.php,Vendor Maintenance,heading_styled,230,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+misc/vendor_pricing.php,Vendor Maintenance - Pricing Structure,heading_styled,112,
+model_mas.php,Model Making Sheet,heading_styled,682,"<?=$_REQUEST['action']==""modify""?""Modify"":""Add""?>"
+model_vadeform.php,Model Making And Vendor Assignment data entry Form,heading_styled,512,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+model_vadeform_main.php,Model Making And Vendor Assignment data entry Form,heading_styled,63,
+pdf/tutorial/tuto6.php,all at once,bold_text,102,
+plugin/view/bom_finding_breakdown.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/bom_packing.php,Revise,heading_class,36,<?= isset($data['revno']) ? $data['revno'] : 0; ?>
+plugin/view/bom_stone_breakdown.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_color_stonein_window_transaction.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_diamond_stonein_window_transaction.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_diamond_window_transaction.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_finding_stonein_window_transaction.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_packing_stonein_window_transaction.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+plugin/view/ws_stonein_status.php,P. D. & P. Ltd. Mini Systems,page_title,11,
+prepro/bom_img_main.php,Finished Sample Image Upload Form Maintenance,heading_styled,114,
+prepro/bom_img_mas.php,Finished Sample Image Upload Form,heading_styled,59,
+prepro/bom_main.php,Bill of Material Maintenance,heading_styled,206,
+prepro/bom_mas-202205121.php,Bill of Material Sheet,heading_styled,552,<?= ucwords($_REQUEST['action']) ?>
+prepro/bom_mas.php,Bill of Material Sheet,heading_styled,552,<?= ucwords($_REQUEST['action']) ?>
+prepro/bom_release.php,BOM Release Checker Form,heading_styled,221,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+prepro/bom_release_main.php,BOM Release Checker Maintenance,heading_styled,108,
+prepro/bom_stone.php,P. D. & P. Ltd. Mini Systems,page_title,251,
+prepro/bom_stonesum.php,Presario System,page_title,13,
+prepro/ebom_main.php,ESTIMATE Bill of Material Maintenance,heading_styled,143,
+prepro/ebom_mas.php,ESTIMATE Bill of Material Sheet,heading_styled,513,<?=ucwords($_REQUEST['action'])?>
+prepro/ebom_stone.php,P. D. & P. Ltd. Mini Systems,page_title,244,
+prepro/master_bom.php,Presario System,page_title,14,
+prepro/master_findingsum.php,Presario System,page_title,13,
+prepro/master_main.php,Master Worksheet Maintenance,heading_styled,163,
+prepro/master_mas.php,Master WorkSheet,heading_styled,971,<?= ucwords($_REQUEST['action']) ?>
+prepro/master_mmstone.php,P. D. & P. Ltd. Mini Systems,page_title,86,
+prepro/master_srlist.php,Prom. Shipdate for MWS,heading_styled,549,<?=ucwords($_REQUEST['action'])?>
+prepro/master_srlist_main.php,Prom. Shipdate for MWS,heading_styled,111,
+prepro/master_stone.php,Presario System,page_title,14,
+prepro/master_stonein.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+prepro/master_stonesum.php,Presario System,page_title,13,
+prepro/mm_finish_date_approval_form_functions.php,""" . $cur_page . """,bold_text,352,
+prepro/mm_finish_date_approval_form_main.php,Model Finished Date Approval Form Maintenance,heading_styled,150,
+prepro/mm_finish_date_approval_form_mas.php,Model Finished Date Approval Form,heading_styled,282,<?php echo $method; ?>
+prepro/mmm_image.php,P. D. & P. Ltd. Mini Systems,page_title,477,
+prepro/model_approval.php,Model Breakdown Approval Form,heading_styled,738,"<?= $_REQUEST['action'] == ""add"" ? ""Add"" : ""Modify"" ?>"
+prepro/model_approval_bead.php,Beads Record Form,heading_styled,481,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+prepro/model_approval_bead_main.php,Beads Record Form,heading_styled,108,
+prepro/model_approval_main.php,Model Breakdown Approval Form,heading_styled,129,
+prepro/model_image-20220822-PETER.php,P. D. & P. Ltd. Mini Systems,page_title,252,
+prepro/model_image.php,P. D. & P. Ltd. Mini Systems,page_title,252,
+prepro/model_img_main.php,Model Image Upload Form Maintenance,heading_styled,145,
+prepro/model_img_mas.php,Model Image Upload Form,heading_styled,61,
+prepro/model_invbymaker.php,Model Making Invoice from The Model Maker,heading_styled,963,"<?= $_REQUEST['action'] == ""add"" ? ""ADD"" : ""MODIFY"" ?>"
+prepro/model_invbymaker_main.php,Model Making Invoice from The Model Maker,heading_styled,66,
+prepro/model_main.php,Model Making Sheet,heading_styled,177,
+prepro/model_mas-20220608fallback.php,Model Making Sheet,heading_styled,764,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+prepro/model_mas-20220615-PETER.php,Model Making Sheet,heading_styled,765,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+prepro/model_mas-20220706-PETER.php,Model Making Sheet,heading_styled,765,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+prepro/model_mas.php,Model Making Sheet,heading_styled,772,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+prepro/model_mas_bypassimage.php,Model Making Sheet,heading_styled,752,"<?=$_REQUEST['action']==""modify""?""Modify"":""Add""?>"
+prepro/model_mas_temp.php,Model Making Sheet,heading_styled,765,"<?= $_REQUEST['action'] == ""modify"" ? ""Modify"" : ""Add"" ?>"
+prepro/model_mminv.php,MM Invoice,heading_styled,919,<?=$cocode?>
+prepro/model_mminv_main.php,MM Invoice,heading_styled,90,<?=$cocode?>
+prepro/model_pfform.php,Model Promised Finished Form,heading_styled,346,"<?=$_REQUEST['action']==""add""?""ADD"":""MODIFY""?>"
+prepro/model_pfform_main.php,Model Promised Finished Form,heading_styled,101,
+prepro/model_search_dsgnno.php,Presario System,page_title,46,
+prepro/model_stone.php,P. D. & P. Ltd. Mini Systems,page_title,99,
+prepro/model_trl.php,Model Transaction Record Form,heading_styled,709,"<?= $_REQUEST['action'] == ""add"" ? ""ADD"" : ""MODIFY"" ?>"
+prepro/model_trl_main-20220819-peter.php,Model Transaction Record Form,heading_styled,98,
+prepro/model_trl_main.php,Model Transaction Record Form,heading_styled,106,
+prepro/model_update_main.php,Style No. Update Entry Form Maintenance,heading_styled,84,
+prepro/model_update_mas.php,Style No. Update Entry Form,heading_styled,255,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+prepro/model_vadeform.php,Model Making And Vendor Assignment data entry Form,heading_styled,664,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+prepro/model_vadeform_main.php,Model Making And Vendor Assignment data entry Form,heading_styled,174,
+prepro/repair_bom.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+prepro/repair_main.php,Repair Worksheet Maintenance,heading_styled,135,
+prepro/repair_main_controller.php,Repair Worksheet Maintenance - Need Follow,heading_styled,134,
+prepro/repair_mas.php,Repair WorkSheet,heading_styled,951,<?= ucwords($_REQUEST['action']) ?>
+prepro/repair_mmstone.php,P. D. & P. Ltd. Mini Systems,page_title,87,
+prepro/repair_srlist.php,Prom. Shipdate for RWS,heading_styled,549,<?=ucwords($_REQUEST['action'])?>
+prepro/repair_srlist_main.php,Prom. Shipdate for RWS,heading_styled,131,
+prepro/repair_stone.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+prepro/repair_stonein.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+prepro/repair_stonesum.php,P. D. & P. Ltd. Mini Systems,page_title,13,
+prepro/sample_draft_main.php,Draft Sample Worksheet Maintenance,heading_styled,251,
+prepro/sample_draft_mas.php,Draft Sample WorkSheet,heading_styled,595,<?= ucwords($_REQUEST['action']) ?>
+prepro/sample_main.php,Sample Worksheet Maintenance,heading_styled,190,
+prepro/sample_mas-202202281.php,Sample WorkSheet,heading_styled,610,<?= ucwords($_REQUEST['action']) ?>
+prepro/sample_mas.php,Sample WorkSheet,heading_styled,654,<?= ucwords($_REQUEST['action']) ?>
+prepro/sample_mmstone.php,P. D. & P. Ltd. Mini Systems,page_title,84,
+prepro/sample_srlist.php,Prom. Shipdate for SWS,heading_styled,601,<?=ucwords($_REQUEST['action'])?>
+prepro/sample_srlist_main.php,Prom. Shipdate for SWS,heading_styled,128,
+prepro/sample_stone.php,Presario System,page_title,14,
+prepro/sample_stone_report.php,Presario System,page_title,14,
+prepro/sample_stonebreak.php,Presario System,page_title,21,
+prepro/worksht_shipped.php,Shipped Transaction,heading_styled,63,
+pro/p_bom_popup.php,(NEW) Open Bom Stone Breakdown (Summarized),bold_text,17,
+pro/prod_bom.php,Presario System,page_title,14,
+pro/prod_draft_main.php,Draft Production Worksheet Maintenance,heading_styled,412,
+pro/prod_draft_mas.php,Draft Production WorkSheet,heading_styled,909,<?= ucwords($_REQUEST['action']) ?>
+pro/prod_findingsum.php,Presario System,page_title,13,
+pro/prod_main.php,Production Worksheet Maintenance,heading_styled,201,
+pro/prod_mas.php,Production WorkSheet,heading_styled,982,<?= ucwords($_REQUEST['action']) ?>
+pro/prod_mas_winnie.php,Product WorkSheet - Add,heading_styled,134,
+pro/prod_mmstone.php,P. D. & P. Ltd. Mini Systems,page_title,115,
+pro/prod_srlist.php,Prom. Shipdate for PWS,heading_styled,550,<?=ucwords($_REQUEST['action'])?>
+pro/prod_srlist_main.php,Prom. Shipdate for PWS,heading_styled,134,
+pro/prod_stone.php,Presario System,page_title,14,
+pro/prod_stonein.php,P. D. & P. Ltd. Mini Systems,page_title,14,
+pro/prod_stonesum.php,Presario System,page_title,13,
+pro/worksht_shipped.php,Shipped Transaction,heading_styled,64,
+reports_mgt/cap_sheet.php,Cap Sheet,heading_styled,75,
+reports_mgt/cust_metal_need_report.php,Cust metal need Report,heading_styled,303,
+reports_mgt/cust_mws-pws_call_stone_report.php,Cust MWS PWS Call Stone Report,heading_styled,106,
+reports_mgt/cust_outstanding_model_report.php,Customer Outstanding Model Report,heading_styled,59,
+reports_mgt/cust_outstanding_sample_report.php,Customer Outstanding Sample Report,heading_styled,77,
+reports_mgt/cust_po_report.php,Cust PO Report,heading_styled,164,
+reports_mgt/cust_po_search_function.php,Customer PO Search Report,heading_styled,109,
+reports_mgt/design_daily_report.php,Designer Daily Output Report,heading_styled,50,
+reports_mgt/design_monthly_report.php,Designer Monthly Output Report,heading_styled,50,
+reports_mgt/fty_outstanding_model_report.php,Fty Outstanding Model Report,heading_styled,84,
+reports_mgt/fty_outstanding_sample_report.php,Fty Outstanding Sample Report,heading_styled,79,
+reports_mgt/fty_po_report.php,FTY PO Report,heading_styled,179,
+reports_mgt/fty_stock_report.php,FTY Stock Report,heading_styled,73,
+reports_mgt/fty_total_metal_need_report.php,Fty metal need Report,heading_styled,450,
+reports_mgt/gold_assignment_for_mws_form.php,Gold Assignment for MWS Form,heading_styled,59,
+reports_mgt/gold_assignment_for_pws_form.php,Gold Assignment for PWS Form,heading_styled,61,
+reports_mgt/management_search_qc_report.php,Management QC Entry Report,heading_styled,163,
+reports_mgt/mmlocation_report.php,Model Location Report,heading_styled,51,
+reports_mgt/model_dist_mas.php,Model Distribution Report - Daily,heading_styled,84,
+reports_mgt/model_dist_monthly_mas.php,Model Distribution Report - Monthly,heading_styled,80,
+reports_mgt/model_report.php,Stock Report,heading_styled,51,
+reports_mgt/modelstatus_report.php,Stock Report,heading_styled,51,
+reports_mgt/no_ship_date_report.php,Gold Assignment for MWS Form,heading_styled,62,
+reports_mgt/no_shipdate_report.php,No Shipdate Report,heading_styled,186,
+reports_mgt/non_completed_report.php,Non-Completed Report,heading_styled,152,
+reports_mgt/nonbilling_report.php,Non Billing Model Report,heading_styled,70,
+reports_mgt/outstanding_model_report.php,Outstanding Model Report,heading_styled,77,
+reports_mgt/outstanding_sample_report.php,Outstanding Sample Report,heading_styled,78,
+reports_mgt/pdp_outstanding_model_report.php,PDP Outstanding Model Report,heading_styled,65,
+reports_mgt/pdp_outstanding_sample_report.php,PDP Outstanding Sample Report,heading_styled,71,
+reports_mgt/pdp_po_report.php,PDP PO Report,heading_styled,79,
+reports_mgt/pdp_po_search_function.php,PDP Po Search Function,heading_styled,74,
+reports_mgt/pdp_stock_report.php,PDP Stock Report,heading_styled,72,
+reports_mgt/po_report.php,PO Report,heading_styled,173,
+reports_mgt/po_report1.php,PO Report,heading_styled,51,
+reports_mgt/po_search_function.php,Po Search Report,heading_styled,128,
+reports_mgt/prom_ship_date.php,Prom Shipdate Report,heading_styled,111,
+reports_mgt/promship_report.php,Promise Shipdate Report,heading_styled,98,
+reports_mgt/promship_report_factory.php,Factory Promise Shipdate Report,heading_styled,107,
+reports_mgt/qc_entry_form.php,QC Entry form,heading_styled,143,
+reports_mgt/samplestatus_report.php,Stock Report,heading_styled,51,
+reports_mgt/shipinfo_report.php,Shipping Info Report,heading_styled,68,
+reports_mgt/stock_report.php,Stock Report,heading_styled,72,
+reports_mgt/stock_report1.php,Stock Report,heading_styled,51,
+reports_mgt/stock_report2.php,Stock Report,heading_styled,59,
+reports_mgt/vendor_po_search_function.php,Vendor PO Search Report,heading_styled,126,
+reports_mgt/vendor_po_search_function_history.php,Vendor PO Search Report,heading_styled,126,
+stone/20211116stoneout_mas.php,Stone-Out Stone Data,heading_styled,377,<?=ucwords($_REQUEST['action'])?>
+stone/draftinvoice_mas.php,Draft Invoice,heading_styled,704,<?=ucwords($_REQUEST['action'])?>
+stone/frompdp/stock_mas.php,Stone Transaction,heading_styled,400,<?=ucwords($_REQUEST['action'])?>
+stone/sample_stone.php,Presario System,page_title,75,
+stone/srt_main.php,Returned & broken material Maintenance,heading_styled,37,
+stone/srt_mas.php,Returned & broken material record No. Maintenance,heading_styled,156,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+stone/stock_main.php,Stone Transaction Maintenance,heading_styled,158,
+stone/stock_mas.php,Stone Transaction,heading_styled,400,<?=ucwords($_REQUEST['action'])?>
+stone/stock_report.php,Stone Useage Report,heading_styled,637,<?=ucwords($_REQUEST['action'])?>
+stone/stock_report2.php,Stone Useage Report,heading_styled,585,<?= ucwords($_REQUEST['action']) ?>
+stone/stock_report_main.php,Stone Useage Report Maintenance,heading_styled,185,
+stone/stock_report_main2.php,Stone Useage Report Maintenance,heading_styled,193,
+stone/stonein-out.php,Stone In-Out Report by Worksheet,heading_styled,419,
+stone/stonein-out_findings.php,Stone In-Out for Findings Report by Worksheet,heading_styled,230,
+stone/stonein_label_main.php,Stone-In Print Label & Barcode,heading_styled,124,
+stone/stonein_main.php,Stone-In Maintenance,heading_styled,208,
+stone/stonein_main_temp.php,Stone-In Maintenance,heading_styled,208,
+stone/stonein_mas-20220614-PETER.php,Stone-In,heading_styled,973,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_mas-20220615-PETER.php,Stone-In,heading_styled,961,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_mas-20220617-PETER.php,Stone-In,heading_styled,962,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_mas-20220622-Peter.php,Stone-In,heading_styled,962,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_mas-20220627-PETER.php,Stone-In,heading_styled,1005,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_mas.php,Stone-In,heading_styled,1007,<?= ucwords($_REQUEST['action']) ?>
+stone/stonein_out_findings_report_mas.php,Stone In-Out for Findings Report,heading_styled,74,
+stone/stonein_out_report_mas.php,Stone In-Out Report,heading_styled,75,
+stone/stoneout_main.php,Stone-Out Maintenance - Stone,heading_styled,144,
+stone/stoneout_main_metal.php,Stone-Out Maintenance - Metal,heading_styled,142,
+stone/stoneout_mas.php,Stone-Out Stone Data,heading_styled,377,<?=ucwords($_REQUEST['action'])?>
+stone/stoneout_mas_metal.php,Stone-Out - Metal Data,heading_styled,490,<?= ucwords($_REQUEST['action']) ?>
+stone/stoneout_masdetail.php,Stone-Out Maintenance,heading_styled,72,"<?=$_REQUEST['action']==""add""?""Add"":""Modify""?>"
+stone/viewaverage.php,Average Details,heading_styled,45,
+stone/viewbom.php,Bill of Material Detail,heading_styled,48,
+stone/viewbomspec.php,Bill of Material Detail,heading_styled,49,
+stone/viewbomsumm.php,Bill of Material Detail,heading_styled,36,
+stone/viewlotsummary.php,View Stock/Lot Summary,heading_styled,149,
+stone/viewmmsspec.php,Model Making Sheet Detail,heading_styled,48,
+stone/viewstoneindetail.php,Stone-In Detail,heading_styled,142,
+stone/viewstoneinremarks.php,Stone-In Remarks,heading_styled,52,
+stone/viewsws.php,WorkSheet Info,heading_styled,384,
+stone/viewwsremarks.php,Worksheet Remarks,heading_styled,43,
+stoneout_main.php,Stone-Out Maintenance - Stone,heading_styled,105,
+stoneout_main_metal.php,Stone-Out Maintenance - Metal,heading_styled,103,
+stoneout_mas_metal.php,Stone-Out - Metal Data,heading_styled,342,<?=ucwords($_REQUEST['action'])?>

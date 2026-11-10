@@ -1,0 +1,1 @@
+python build_glossary.py --in D:\Dataset_20261020\labels_v5 --out D:\Dataset_20261020\out_glossary

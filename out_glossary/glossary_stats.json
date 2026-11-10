@@ -1,0 +1,19 @@
+{
+  "cards": 2248,
+  "generic": 37,
+  "by_kind": {
+    "page": 422,
+    "menu": 314,
+    "message": 255,
+    "link": 275,
+    "field": 1279,
+    "button": 143
+  },
+  "by_ambiguity": {
+    "low": 1274,
+    "high": 489,
+    "medium": 448
+  },
+  "with_definition": 0,
+  "definitions_todo": 2237
+}
