@@ -1,0 +1,44 @@
+{
+  "input": 1020,
+  "accepted": 722,
+  "rejected": 298,
+  "accepted_by_task": {
+    "glossary_conditioned_generation": 3,
+    "contrastive_term_linking": 719
+  },
+  "accepted_by_source": {
+    "llm": 3,
+    "deterministic": 719
+  },
+  "reject_reasons": {
+    "near_duplicate": 281,
+    "technical_leak": 12,
+    "missing_required_surface": 5,
+    "confusable_term": 2,
+    "missing_technical_name": 1
+  },
+  "terms_seen": 19,
+  "terms_with_accepted": 3,
+  "terms_below_min": [
+    "casting assay information",
+    "checked by ps",
+    "click here to view the stones breakdown summarized",
+    "copper lock price",
+    "create packing materials information",
+    "customer",
+    "customer code",
+    "customer logo metal stamp",
+    "display encrypt hidden",
+    "display hidden",
+    "inspected qty",
+    "model createtable table table table fields echo",
+    "non completed report mms",
+    "opening stock",
+    "other metal",
+    "presario system",
+    "qty",
+    "request start request start no of einvoice",
+    "srlist row qc wsno n echo"
+  ],
+  "min_per_term": 3
+}

@@ -1,0 +1,21 @@
+{
+  "input": 90,
+  "accepted": 84,
+  "rejected": 6,
+  "accepted_by_task": {
+    "glossary_conditioned_generation": 72,
+    "ambiguous_term_resolution": 4,
+    "contrastive_term_linking": 8
+  },
+  "accepted_by_source": {
+    "template": 76,
+    "deterministic": 8
+  },
+  "reject_reasons": {
+    "near_duplicate": 6
+  },
+  "terms_seen": 12,
+  "terms_with_accepted": 12,
+  "terms_below_min": [],
+  "min_per_term": 3
+}
