@@ -1,0 +1,27 @@
+{
+  "fineweb": {
+    "type": "hf",
+    "path": "HuggingFaceFW/fineweb-edu",
+    "config": "sample-10BT",
+    "text_key": "text"
+  },
+  "squad": {
+    "type": "squad",
+    "path": "rajpurkar/squad"
+  },
+  "php": {
+    "type": "stack",
+    "path": "bigcode/the-stack-v2",
+    "config": "PHP",
+    "license_types": [
+      "permissive"
+    ],
+    "min_bytes": 300,
+    "max_bytes": 60000
+  },
+  "synthetic": {
+    "type": "jsonl",
+    "path": "../03_synthetic/validated.jsonl",
+    "text_key": "training_text"
+  }
+}

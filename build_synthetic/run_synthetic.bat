@@ -1,13 +1,14 @@
 @echo off
 setlocal EnableExtensions
 REM ------------------------------------------------------------------------------
-REM Usage: run_synthetic.bat EXTRACTION_OUT_DIR [BACKEND] [MODEL] [LIMIT]
+REM Usage: run_synthetic.bat EXTRACTION_OUT_DIR [BACKEND] [MODEL] [LIMIT] [ENDPOINT]
 REM   EXTRACTION_OUT_DIR  output folder of run_static_analysis.bat; must contain glossary\term_cards.jsonl
-REM   BACKEND             template (default) | ollama | anthropic | openai
-REM   MODEL               required for ollama / openai, e.g. qwen2.5:7b-instruct
+REM   BACKEND             template (default) | llamacpp | ollama | anthropic | openai
+REM   MODEL               required for ollama / openai (e.g. qwen2.5:7b-instruct); optional label for llamacpp
 REM   LIMIT               optional: plan only N requests (test run). Deletes the previous generated_raw.jsonl.
+REM   ENDPOINT            optional; llamacpp default http://127.0.0.1:8080 (start llama-server first)
 REM Example (cmd):
-REM   run_synthetic.bat D:\Dataset_20261020\labels_v5 ollama qwen2.5:7b-instruct 20
+REM   run_synthetic.bat D:\local-claude\NPDP_dataset\labels_v5 ollama qwen2.5:7b-instruct 20
 REM Re-running without LIMIT resumes an interrupted generation (ids are stable for the same seed).
 REM ------------------------------------------------------------------------------
 set "HERE=%~dp0"
@@ -37,6 +38,8 @@ if /I "%BACKEND%"=="openai" if "%~3"=="" (
 
 set "MODEL_ARG="
 if not "%~3"=="" set MODEL_ARG=--model "%~3"
+set "ENDPOINT_ARG="
+if not "%~5"=="" set ENDPOINT_ARG=--endpoint "%~5"
 set "LIMIT_ARG="
 if not "%~4"=="" (
   set LIMIT_ARG=--limit %~4
@@ -48,9 +51,9 @@ python "%HERE%02_knowledge\build_knowledge.py" --csv-dir "%EXT%" --glossary-dir 
 echo [2/5] plan ...
 python "%S%\build_synthetic.py" plan --knowledge "%K%" --out "%S%\requests.jsonl" --ambiguous %LIMIT_ARG% || exit /b 1
 echo [3/5] generate (%BACKEND%) ...
-python "%S%\build_synthetic.py" generate --requests "%S%\requests.jsonl" --out "%S%\generated_raw.jsonl" --backend %BACKEND% %MODEL_ARG% --resume || exit /b 1
+python "%S%\build_synthetic.py" generate --requests "%S%\requests.jsonl" --out "%S%\generated_raw.jsonl" --backend %BACKEND% %MODEL_ARG% %ENDPOINT_ARG% --resume || exit /b 1
 echo [4/5] contrastive pairs ...
-python "%S%\build_synthetic.py" contrast --knowledge "%K%" --out "%S%\generated_raw.jsonl" --append || exit /b 1
+python "%S%\build_synthetic.py" contrast --knowledge "%K%" --out "%S%\generated_raw.jsonl" --append --backend %BACKEND% %MODEL_ARG% %ENDPOINT_ARG% --bank-file "%S%\skeleton_bank.json" || exit /b 1
 echo [5/5] validate ...
 python "%S%\validate_synthetic.py" --knowledge "%K%" --in "%S%\generated_raw.jsonl" --out-dir "%S%" --export-pretrain "%S%\pretrain.jsonl" --export-structured "%S%\structured.jsonl" || exit /b 1
 echo [OK] results in %S%  (validation_report.json, validated.jsonl, rejected.jsonl, pretrain.jsonl, structured.jsonl)
