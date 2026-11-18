@@ -21,7 +21,7 @@
   },
   "synthetic": {
     "type": "jsonl",
-    "path": "../03_synthetic/validated.jsonl",
+    "path": "../../harmony_claude/pretrain.jsonl",
     "text_key": "training_text"
   }
 }

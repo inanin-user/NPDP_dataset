@@ -29,6 +29,7 @@ import random
 import sys
 import time
 from pathlib import Path
+from transformers import PreTrainedTokenizerFast
 
 import torch
 import torch.nn.functional as F
@@ -37,13 +38,62 @@ import mix_core as MC
 
 
 def load_tokenizer(path):
-    from transformers import PreTrainedTokenizerFast
     p = Path(path)
+
     if p.is_dir():
         p = p / "tokenizer.json"
-    return PreTrainedTokenizerFast(tokenizer_file=str(p),
-        bos_token="<|begin_of_text|>", eos_token="<|end_of_text|>",
-        unk_token="<|unk|>", pad_token="<|pad|>")
+
+    if not p.is_file():
+        raise FileNotFoundError(f"Tokenizer file not found: {p}")
+
+    tokenizer = PreTrainedTokenizerFast(
+        tokenizer_file=str(p),
+        bos_token="<|endoftext|>",
+        eos_token="<|endoftext|>",
+        unk_token="<|endoftext|>",
+    )
+
+    # GPT-2 does not have a dedicated padding token.
+    # Reuse EOS only if padding is needed.
+    tokenizer.pad_token = tokenizer.eos_token
+
+    return tokenizer
+
+def validate_tokenizer(tokenizer):
+    harmony_tokens = [
+        "<|start|>",
+        "<|message|>",
+        "<|channel|>",
+        "<|end|>",
+        "<|return|>",
+    ]
+
+    print(f"Tokenizer size: {len(tokenizer)}")
+    print(f"Tokenizer fast: {tokenizer.is_fast}")
+    print(f"EOS token: {tokenizer.eos_token}")
+    print(f"EOS token ID: {tokenizer.eos_token_id}")
+    print(f"PAD token: {tokenizer.pad_token}")
+    print(f"PAD token ID: {tokenizer.pad_token_id}")
+
+    for token in harmony_tokens:
+        token_ids = tokenizer.encode(
+            token,
+            add_special_tokens=False
+        )
+
+        if len(token_ids) != 1:
+            raise ValueError(
+                f"{token} is not a single token: {token_ids}"
+            )
+
+        if tokenizer.convert_ids_to_tokens(token_ids[0]) != token:
+            raise ValueError(
+                f"Token ID round-trip failed: {token}"
+            )
+
+        print(f"{token:16} -> {token_ids[0]}")
+
+    return True
 
 
 def make_sources(path):
@@ -182,7 +232,7 @@ def main():
     p.add_argument("--sources", required=True, help="JSON source registry")
     p.add_argument("--mix", default="fineweb=0.55,squad=0.20,php=0.20,synthetic=0.05")
     p.add_argument("--preset", choices=sorted(MC.PRESETS), default="s")
-    p.add_argument("--seq-len", type=int, default=512)
+    p.add_argument("--seq-len", type=int, default=1024)
     p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--micro-batch", type=int, default=1)
     p.add_argument("--grad-accum", type=int, default=16)
@@ -206,6 +256,7 @@ def main():
         torch.cuda.manual_seed_all(a.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     tok = load_tokenizer(a.tokenizer)
+    validate_tokenizer(tok)
     sources = make_sources(a.sources)
     stages = [(0.0, MC.normalise(MC.parse_mix(a.mix)))]
     unknown = set(stages[0][1]) - set(sources)

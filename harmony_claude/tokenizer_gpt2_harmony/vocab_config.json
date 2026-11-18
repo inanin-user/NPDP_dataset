@@ -1,0 +1,14 @@
+{
+ "tokenizer_vocab_size": 50262,
+ "model_vocab_size": 50304,
+ "eos_id": 50256,
+ "dtype": "uint16",
+ "token_ids": {
+  "<|endoftext|>": 50256,
+  "<|start|>": 50257,
+  "<|message|>": 50258,
+  "<|channel|>": 50259,
+  "<|end|>": 50260,
+  "<|return|>": 50261
+ }
+}
